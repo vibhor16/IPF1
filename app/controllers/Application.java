@@ -5,6 +5,7 @@ import model.Clients.ClientResult;
 import model.Clients.ClientResults;
 import model.Clients.ClientFactory;
 import model.Clients.ClientThread;
+import model.Utilities.Messages;
 import play.libs.Json;
 import play.mvc.*;
 
@@ -68,7 +69,7 @@ public class Application extends Controller {
         
         //This client is already searching
             if(clientObject.getClientInstancesRunning()>1){
-                    return ok(error.render("Client is already opened in another window! Reload 'localhost:9000' else close all other open windows for Impact Path Flow and try again."));
+                    return ok(error.render(Messages.ERROR_CLIENT_EXISTS,CLIENT_IP));
             }
             
         return ok(initFront.render(CLIENT_IP));

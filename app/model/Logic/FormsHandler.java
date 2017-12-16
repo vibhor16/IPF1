@@ -1,12 +1,18 @@
 package model.Logic;
 
+import model.Clients.Client;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FormsHandler {
 
 	HashMap<String, ArrayList<String>> FINAL_RESULT;
-	 
+	Client clientObject;
+
+	public FormsHandler(Client clientObject){
+		this.clientObject=clientObject;
+	}
 	public void init()
 	{
 		
@@ -15,7 +21,7 @@ public class FormsHandler {
 	{
 	  	
     	// Count files globally
-    	DriverClass.GLOBAL_FILE_COUNT++;
+		clientObject.GLOBAL_FILE_COUNT++;
     	return FINAL_RESULT;
 	}
 

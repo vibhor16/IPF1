@@ -14,7 +14,8 @@
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
-
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
 
 
   </head>
@@ -743,12 +744,21 @@
             var UtilityCallInterval;
             var SystemReadyCallInterval;
             var Utilities_html="";
+
+            $(document).ready(function() {
+              $("#repoList").prop('disable', true);
+              $("#searchString").blur(function () {
+                if (!$("#searchString").val()) {
+                  $("#repoList").prop('disable', false);
+                }
+              });
+            })
             function init()
             {
               document.getElementById("stop_search_button").disabled = true;
               document.getElementById("main_search_button").disabled = true;
-              document.getElementById("searchString").disabled 	   = true;
-              document.getElementById("repoList").disabled 		   = true;
+//              document.getElementById("searchString").disabled 	   = true;
+//              document.getElementById("repoList").disabled 		   = true;
               showLoader("Initialising, please wait...");
               $('#search_duration').html("00:00:00");
               populateReleaseList();
@@ -757,7 +767,11 @@
               SystemReadyCallInterval=setInterval(function(){ getSystemReadyStatus(SystemReadyCallInterval)  }, 500);
 
               //getUtilityFilePkgName();
+              debugger;
+
             }
+
+
 
             function pathterminator(ajax_CLIENT_IP,level_count,key){
               // console.log("PathTerm VIbhor:  "+ajax_CLIENT_IP+"  "+level_count+"  "+key);
@@ -1974,8 +1988,7 @@
 
     </script>
 
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+
 
   </body>
 </html>

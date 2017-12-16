@@ -1,4 +1,4 @@
-@(error_string: String)
+@(error_string: String, ajax_CLIENT_IP : String)
 <html>
 <head>
     <title>Impact Path Flow 1.0</title>
@@ -9,7 +9,17 @@
 <body>
 <h2>@error_string</h2>
 
+<script type="text/javascript">
 
+        window.onunload = function (event) {
+            var CLIENT_IP='@ajax_CLIENT_IP';
+            var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
+            $.ajax({
+                url: myURL,
+                async: false
+            });
+        };
+</script>
 
 </body>
 </html>

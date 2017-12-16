@@ -1,0 +1,83 @@
+Before 14th version
+PLS_DIRECTORIES
+PLS: /Packages/Source
+FMB_DIRECTORIES
+FMB: /Forms/Source
+OTHER_DIRECTORIES
+OTHER: /Procedures/Source
+OTHER: /Batch/Proc/Source
+OTHER: /Batch/Lib/Source
+OTHER: /Data_conversion_Scripts/External_Table_Scripts
+OTHER: /Data_conversion_Scripts/Data_Load_Scripts
+OTHER: /Database_Change_Scripts/Source
+OTHER: /Database_Migration_Scripts/Source
+OTHER: /Triggers/Source
+OTHER: /Types/Source
+
+After 14th version
+PLS_DIRECTORIES
+PLS: /Cross_Pillar/packages/source
+PLS: /Financials/packages/source
+PLS: /Foundation/packages/source
+PLS: /Import_Export/packages/source
+PLS: /Inventory_Movement/packages/source
+PLS: /Inventory_Tracking/packages/source
+PLS: /Localization/packages/source
+PLS: /Procurement/packages/source
+FMB_DIRECTORIES
+FMB: /Cross_Pillar/forms/source
+FMB: /Financials/forms/source
+FMB: /Foundation/forms/source
+FMB: /Import_Export/forms/source
+FMB: /Inventory_Movement/forms/source
+FMB: /Inventory_Tracking/forms/source
+FMB: /Localization/forms/source
+FMB: /Procurement/forms/source
+OTHER_DIRECTORIES
+OTHER: /Cross_Pillar/procedures/source
+OTHER: /Financials/procedures/source
+OTHER: /Foundation/procedures/source
+OTHER: /Inventory_Movement/procedures/source
+OTHER: /Inventory_Tracking/procedures/source
+OTHER: /Procurement/procedures/source
+OTHER: /Cross_Pillar/batch/source
+OTHER: /Cross_Pillar/batch/lib
+OTHER: /Cross_Pillar/control_scripts/source
+OTHER: /Cross_Pillar/install_scripts/source
+OTHER: /Cross_Pillar/db_change_scripts/source
+OTHER: /Cross_Pillar/triggers/source
+OTHER: /Cross_Pillar/types/source
+OTHER: /Financials/batch/source
+OTHER: /Financials/batch/lib
+OTHER: /Financials/data_conversion_scripts/external_table_scripts
+OTHER: /Financials/db_change_scripts/source
+OTHER: /Financials/triggers/source
+OTHER: /Financials/types/source
+OTHER: /Foundation/batch/source
+OTHER: /Foundation/batch/lib
+OTHER: /Foundation/data_conversion_scripts/external_table_scripts
+OTHER: /Foundation/db_change_scripts/source
+OTHER: /Foundation/triggers/source
+OTHER: /Foundation/types/source
+OTHER: /Import_Export/batch/source
+OTHER: /Import_Export/db_change_scripts/source
+OTHER: /Import_Export/triggers/source
+OTHER: /Import_Export/types/source
+OTHER: /Inventory_Movement/batch/source
+OTHER: /Inventory_Movement/batch/lib
+OTHER: /Inventory_Movement/db_change_scripts/source
+OTHER: /Inventory_Movement/triggers/source
+OTHER: /Inventory_Movement/types/source
+OTHER: /Inventory_Tracking/batch/source
+OTHER: /Inventory_Tracking/db_change_scripts/source
+OTHER: /Inventory_Tracking/triggers/source
+OTHER: /Inventory_Tracking/types/source
+OTHER: /Localization/batch/proc/source
+OTHER: /Localization/batch/lib/source
+OTHER: /Localization/db_change_scripts/source
+OTHER: /Localization/types/source
+OTHER: /Procurement/batch/source
+OTHER: /Procurement/batch/lib
+OTHER: /Procurement/db_change_scripts/source
+OTHER: /Procurement/types/source
+OTHER: /Procurement/triggers/source

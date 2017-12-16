@@ -1,0 +1,1981 @@
+@(FILE_DIRECTORY_PATH : LinkedHashMap[String,String], selectedRepository: String, popupText: String, GLOBAL_FILE_COUNT: Integer, selectRepoList: ArrayList[String], FINAL_ALL_PATHS: LinkedHashMap[Integer, ArrayList[String]] , colorSelectedFunctions: ArrayList[String], displayTillLevel: Integer, CURRENT_PATH: ArrayList[String], ALL_SEARCH_STRINGS : ArrayList[String] , ALL_REFINED_HM :  ArrayList[LinkedHashMap[String, ArrayList[String]]] , ALL_TYPE_COUNTS : ArrayList[LinkedHashMap[String,String]], ajax_CLIENT_IP : String)
+@import scala.Predef; var func_count= 1; var level_count= 1; var main_index= -1; var cur_count = 1; var repoName= "";
+
+
+<html>
+  <head>
+    <title>Impact Path Flow 1.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<link rel="icon" href="@routes.Assets.at("images/tab_icon.png")">*@
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/vendor.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/flat-admin.css")">
+      <!-- Theme -->
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue-sky.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
+
+
+
+  </head>
+  <body onload="init()">
+    <div class="row" style="height: 8px">
+      <div class="col-lg-12" style="padding-bottom: 0px;">
+        <div class="card card-tab" style="margin-top:0">
+          <div class="progress" style="height: 8px;margin-bottom: 0px;">
+            <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main_card_body">
+
+        <!-- vibhor -->
+      <div class="app app-default">
+
+
+
+        <aside class="app-sidebar" id="sidebar">
+
+          <div class="sidebar-header">
+
+            @*<a href="/" style="a:hover {color: black;}"><img src=@routes.Assets.at("images/OracleLogo2.png")>*@
+              <div style="text-align: center;"><p><b>Impact Path Flow</b></p></div></a>
+
+
+
+
+            <button type="button" class="sidebar-toggle">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+
+          <div class="sidebar-menu">
+            <ul class="sidebar-nav">
+              <li class="active">
+                <div class="form-group">
+                  <label class="col-md-4 control-label" style="color: black;">String</label>
+                  <div class="col-md-12">
+
+                    @if(CURRENT_PATH.size() > 0){
+                      <input id="searchString" type="text" class="form-control" placeholder="@CURRENT_PATH.get(CURRENT_PATH.size()-1)" name="searchString">
+                    }else{
+                      <input id="searchString" type="text" class="form-control" placeholder="" name="searchString">
+                    }
+
+                    <label style="color: black;" >Release</label>
+                    <select id="repoList" class="form-control"  name="repoList">
+                        <!-- <option selected="selected" value=""> </option>
+						@for(dir <- selectRepoList){
+
+                      @(repoName=dir.substring(dir.indexOf("-")+1,dir.length()))
+                      @if(selectedRepository!=null){
+                        @if(selectedRepository.equals(repoName)){
+                          <option value="@dir"  selected>@repoName</option>
+                        }else{
+                          <option value="@dir">@repoName</option>
+                        }
+                      }else{
+                        <option value="@dir">@repoName</option>
+                      }
+
+
+
+                    } -->
+                    </select>
+
+
+
+
+
+
+                    <br>
+                    <div style="cursor:pointer" onclick="moreOptions()" id="advanced_options">Advanced Options</div>
+
+                    <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
+                    @*<button id="main_refresh_button" type="button" onclick="refreshPage()"  class="btn btn-warning" style="margin-left:25%" >New Search &nbsp<i class="fa fa-refresh"></i></button>*@
+
+                  </div>
+
+                </div>
+
+              </li>
+
+
+                <!-- <li class="active" >
+     <label>Past Searches</label>
+     <div style="overflow:auto;height: 250px;">
+    <table class="table table-striped table-bordered table-hover">
+
+      <tbody id="pastSearches">
+
+      </tbody>
+    </table>
+    </div>
+    </li> -->
+            </ul>
+          </div>
+
+
+        </aside>
+
+        <script type="text/ng-template" id="sidebar-dropdown.tpl.html">
+        <div class="dropdown-background">
+        <div class="bg"></div>
+        </div>
+        <div class="dropdown-container">
+
+        </div>
+        </script>
+
+
+        <div class="app-container">
+          <nav class="navbar navbar-default" id="navbar">
+            <div class="container-fluid">
+              <div class="navbar-collapse collapse in">
+                <ul class="nav navbar-nav navbar-mobile">
+                  <li>
+                    <button type="button" class="sidebar-toggle">
+                      <i class="fa fa-bars"></i>
+                    </button>
+                  </li>
+                  <li class="logo">
+                    <p class="navbar-brand" href="#"><span class="highlight">Impact Path</span> Flow</p>
+                  </li>
+                  <li>
+                    <button type="button" class="navbar-toggle">
+
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="row">
+                  <div class="col-lg-12">
+
+                    <div class="section"  style="height: 161px;">
+                      <div class="section-title">
+                        <h4 style="color: black;">Current Path</h4>
+                        <div style="margin-left: auto;">
+                          <p style="display: inline;vertical-align: -webkit-baseline-middle;" id="search_duration"></p>
+                          <button style="display: none" id="stop_search_button" type="button" onclick="stopSearching()" class="btn btn-cancel">Stop &nbsp;<i class="fa fa-close"></i></button>
+                        </div>
+                      </div>
+                      <div class="section-body" style="padding-top: 15px;">
+                        <div class="step" >
+
+                          <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;">
+
+
+                          @for(curr_string <- CURRENT_PATH){
+                            @if(level_count<=displayTillLevel){
+
+                              @if(level_count%5!=0){
+                                <li role="step" id="current_path_area">
+                                  <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
+                                    <div class="icon">@cur_count</div>
+                                    <div class="heading">
+                                      <div class="title">@curr_string</div>
+                                      @if(level_count==1){
+                                        <div class="description">Search String</div>
+
+
+                                      }else{
+                                        @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("fmb")){
+                                          <div class="description">Form</div>
+                                        }
+                                        @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).length()>3){
+
+                                          <div class="description">Package</div>
+
+                                        }
+                                        @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("trg")){
+                                          <div class="description">Trigger</div>
+                                        }
+                                        @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("pc")){
+                                          <div class="description">Batches</div>
+                                        }
+                                      }
+
+
+
+                                    </div>
+                                  </a>
+                                </li>
+                              }else{
+                              </ul>
+                          <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;margin-top: 10px;">
+                            <li role="step">
+                              <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
+                                <div class="icon">@cur_count</div>
+                                <div class="heading">
+                                  <div class="title">@curr_string</div>
+                                  @if(level_count==1){
+                                    <div class="description">Search String</div>
+
+                                  }else{
+                                    @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("fmb")){
+                                      <div class="description">Form</div>
+                                    }
+                                    @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).length()>3){
+
+                                      <div class="description">Package</div>
+
+                                    }
+                                    @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("trg")){
+                                      <div class="description">Trigger</div>
+                                    }
+                                    @if(curr_string.substring(curr_string.lastIndexOf(".")+1,curr_string.length()).equals("pc")){
+                                      <div class="description">Batches</div>
+                                    }
+                                  }
+
+
+
+                                </div>
+                              </a>
+                            </li>
+                            }
+
+                            @(cur_count+=1)
+                            @(level_count+=1)
+                            }
+                            }
+
+
+                          </ul>
+
+
+
+
+
+
+                            <!-- Tab panes
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane" id="step1">
+            <b>Step1</b> </div>
+        <div role="tabpanel" class="tab-pane active" id="step2">
+            <b>Step2</b>   </div>
+        <div role="tabpanel" class="tab-pane" id="step3">
+            <b>Step3</b>   </div>
+        <div role="tabpanel" class="tab-pane" id="step4">
+            <b>Step4</b> </div>
+    </div>-->
+                        </div>
+
+
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+
+                  </div>
+                </div>
+
+
+
+                  <!--   <ul class="nav navbar-nav navbar-left" style="width:100%;max-width:100%;">
+	  @for(curr_string <- CURRENT_PATH){
+
+                <li><button type="button" class="btn btn-success">@cur_count- @curr_string &nbsp&nbsp<i class="fa fa-times"></i></button></li><i class="fa fa-fighter-jet"></i>
+                @(cur_count+=1)
+              }
+                </ul> -->
+
+              </div>
+            </div>
+          </nav>
+
+          <div id="showPopUp">
+          </div>
+
+
+            <!-- @if(popupText!=null){
+          <div class="row">
+            <div class="col-lg-12" style="margin-bottom: 0px">
+
+
+              <div class="modal fade in" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block; padding-right: 17px;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+
+                      <h4 class="modal-title">Warning</h4>
+                    </div>
+                    <div class="modal-body" style="word-wrap:break-word;">
+                      <h4>@popupText</h4>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-sm btn-default" onclick="remove_modal()"><p style="color:white">Close</p></button>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }   -->
+
+
+
+
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card card-tab">
+                <div class="card-header">
+                  <ul class="nav nav-tabs"  style="background-color: rgb(36, 83, 123);">
+                    <li role="tab1" class="active">
+                      <a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Search Results</a>
+                    </li>
+                      <!--   <li role="tab2">
+            <a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Utilities</a>
+            </li> -->
+                    <li role="tab3">
+
+                    @if(FINAL_ALL_PATHS.size()>0){
+                      <a href="/ajax/@ajax_CLIENT_IP/graph" target="_blank" style="font-weight: bold;font-size: large;">View Path Flows*</a>
+                    }
+                    </li>
+                  </ul>
+
+                </div>
+
+                <div id="loader" class="">
+                  <div id="loader_icon">
+
+                  </div>
+
+
+                  <div class="card-body no-padding tab-content" style="overflow-y: scroll;height: 60%;">
+                    <div role="tabpanel" class="tab-pane active" id="tab1" style="height: 100%">
+
+                      <div class="card-body no-padding">
+                        <div class="row no-gap">
+                          <div class="col-xs-12">
+                            <div class="panel-group">
+                              <div id="area_main_card">
+                              @if(ALL_SEARCH_STRINGS.size()==0){
+
+                                <div class="col-md-12 col-sm-12">
+
+                                  <div class="alert alert-danger  alert-dismissible" role="alert" style="    background-color: rgba(212, 59, 138, 0.23)">
+
+                                    <strong>Welcome!</strong> Find your location in the digital world.
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12">
+                                  <div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top:0px;background-color:rgba(154, 30, 220, 0.16)">
+
+                                    Enter the exact search string and select the repository you want to search in and get on with finding the levels of your pathflow.
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 col-lg-12">
+                                  <div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top:0px;    background-color: rgba(108, 127, 249, 0.23)">
+
+                                    A Google Map for the digital world!
+                                  </div>
+                                </div>
+
+
+
+                              }
+                              </div>   <!-- area_main_card -->
+
+
+                              <div id="area_result_card">
+                                @(level_count=1)
+                                @if(ALL_SEARCH_STRINGS.size()!=0){
+
+                                  @for(search_string <- ALL_SEARCH_STRINGS){
+
+                                    @(main_index+=1)
+                                    @if(level_count<=CURRENT_PATH.size()){
+                                      @if(CURRENT_PATH.get(level_count-1).equals(search_string) && level_count<=displayTillLevel){
+
+                                        @if(ALL_TYPE_COUNTS(main_index).get("pls")=="0" && ALL_TYPE_COUNTS(main_index).get("fmb")=="0" && ALL_TYPE_COUNTS(main_index).get("pc")=="0" && ALL_TYPE_COUNTS(main_index).get("trg")=="0"){
+
+                                          @if(level_count>0){
+
+
+                                              <!--
+												<div class="col-lg-12" style="margin-bottom: 0px">
+
+
+													  <div class="modal fade in" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block; padding-right: 17px;">
+													  <div class="modal-dialog">
+														<div class="modal-content">
+														  <div class="modal-header">
+
+															<h4 class="modal-title">Warning</h4>
+														  </div>
+														  <div class="modal-body" style="word-wrap:break-word;">
+															<h4>No further mention of this string</h4>
+														  </div>
+														  <div class="modal-footer">
+															<button type="button" class="btn btn-sm btn-default" onclick="remove_modal()">Close</button>
+
+														  </div>
+														</div>
+													  </div>
+													</div>
+													</div> -->
+
+                                          }
+
+                                        }else{
+                                          <div class="col-md-2 col-sm-2">
+                                            <div class="row no-gap">
+                                              <br>
+                                              <h4 align="middle">Level @(level_count)</h4>
+
+                                              @(level_count+=1)
+                                                <!--	<div><p align="middle"> For:&nbsp&nbsp'@search_string'</p></div> -->
+                                          </div>
+
+
+
+                                            <!-- PACKAGES -->
+                                          <div class="panel panel-default">
+
+
+                                            <div class="panel-heading" data-toggle="collapse" href="#collapse_pkg_@level_count">
+                                              <h4 class="panel-title">
+                                                <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("pls"))</sup><span> Packages</span></pre>
+                                              </h4>
+                                            </div>
+                                            <div id="collapse_pkg_@level_count" class="panel-collapse collapsed" >
+
+                                              @for(key <- ALL_REFINED_HM(main_index).keySet()){
+
+
+                                                @if(ALL_REFINED_HM(main_index).get(key)!=null){
+                                                  <div class="panel-body">
+                                                    <div class="col-md-12 col-sm-2 col-inside">
+                                                      <div class="panel panel-default">
+                                                        <div class="panel-heading" data-toggle="collapse" href="#collapse_@func_count" >
+                                                          <h4 class="panel-title-nest">
+                                                            <pre class="tab"><sup>(@ALL_REFINED_HM(main_index).get(key).size)</sup><span> @key</span></pre>
+                                                          </h4>
+                                                        </div>
+
+                                                        @if(ALL_REFINED_HM(main_index).get(key).size>0){
+                                                          <div id="collapse_@func_count" class="panel-collapse collapsed">
+
+                                                          }else{
+                                                          <div id="collapse_@func_count" class="panel-collapse collapse">
+
+                                                          }
+                                                        @for(func_title <- ALL_REFINED_HM(main_index).get(key)){
+
+                                                          @if(!colorSelectedFunctions.isEmpty()){
+                                                            @if(colorSelectedFunctions.contains((level_count-1)+"-"+key+"-"+func_title)){
+
+
+                                                              <div class="panel-body selected" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                                <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
+                                                              </div>
+                                                            }else{
+
+
+                                                              <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                                <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
+                                                              </div>
+                                                            }
+                                                          }else{
+                                                            <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                              <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
+                                                            </div>
+                                                          }
+
+
+                                                          @(func_count+=1)
+                                                        }
+                                                        <div class="panel-footer" id="@key">
+                                                          <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank">View File</a>
+                                                        </div>
+                                                      </div>
+                                                      </div>
+                                                      </div>
+                                                    </div>
+                                                      <!-- for ends here -->
+                                                    }
+                                                <!-- if ends here -->
+                                              }
+
+                                            </div>
+                                            </div>
+
+
+
+
+                                              <!-- FORMS -->
+                                            <div class="panel panel-default">
+                                              <div class="panel-heading" data-toggle="collapse" href="#collapse_forms_@level_count">
+                                                <h4 class="panel-title">
+                                                  <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("fmb"))</sup><span> Forms</span></pre>
+                                                </h4>
+                                              </div>
+                                              @if(ALL_TYPE_COUNTS(main_index).get("fmb").size>0){
+                                                <div id="collapse_forms_@level_count" class="panel-collapse collapsed">
+                                                }else{
+                                                <div id="collapse_forms_@level_count" class="panel-collapse collapse">
+                                                }
+
+
+
+
+                                              @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
+
+
+                                                @if(key.indexOf(".fmb")>=0){
+
+                                                  @if(!colorSelectedFunctions.isEmpty()){
+
+                                                    @if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
+
+                                                      <div class="panel-body selected" id="@key">
+                                                        <!--<div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>-->
+                                                        <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                        <!-- VIbhor to do : make a function call to pathterm method so that anchor does not change page and client object is not terminated.-->
+                                                      </div>
+                                                    }else{
+                                                      <div class="panel-body" id="@key">
+                                                        <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                      </div>
+                                                    }
+                                                  }else{
+                                                    <div class="panel-body" id="@key">
+                                                      <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                    </div>
+                                                  }
+                                                }
+                                              }<!-- if  of fmb ends here -->
+                                              <!-- for ends here -->
+                                            </div>
+                                            </div>
+
+
+
+                                                <!-- BATCHES -->
+                                              <div class="panel panel-default">
+                                                <div class="panel-heading" data-toggle="collapse" href="#collapse_batches_@level_count">
+                                                  <h4 class="panel-title">
+                                                    <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("pc"))</sup><span> Batches</span> </pre>
+                                                  </h4>
+                                                </div>
+                                                @if(ALL_TYPE_COUNTS(main_index).get("pc").size>0){
+                                                  <div id="collapse_batches_@level_count" class="panel-collapse collapsed">
+                                                  }else{
+                                                  <div id="collapse_batches_@level_count" class="panel-collapse collapse">
+                                                  }
+                                                @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
+
+                                                  @if(key.indexOf(".pc")>=0){
+                                                    @if(!colorSelectedFunctions.isEmpty()){
+                                                      @if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
+
+                                                        <div class="panel-body selected" id="@key">
+                                                          <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                          <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+                                                        </div>
+                                                      }else{
+                                                        <div class="panel-body" id="@key">
+                                                          <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                          <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+                                                        </div>
+                                                      }
+                                                    }else{
+                                                      <div class="panel-body" id="@key">
+                                                        <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                        <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+                                                      </div>
+                                                    }
+                                                  }<!-- if ends here -->
+                                                  }<!-- for ends here -->
+
+                                              </div>
+                                              </div>
+
+
+                                                  <!-- TRIGGERS -->
+                                                <div class="panel panel-default">
+                                                  <div class="panel-heading" data-toggle="collapse" href="#collapse_trg_@level_count">
+                                                    <h4 class="panel-title">
+                                                      <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("trg"))</sup><span> Triggers</span></pre>
+                                                    </h4>
+                                                  </div>
+                                                  @if(ALL_TYPE_COUNTS(main_index).get("trg").size>0){
+                                                    <div id="collapse_trg_@level_count" class="panel-collapse collapsed">
+                                                    }else{
+                                                    <div id="collapse_trg_@level_count" class="panel-collapse collapse">
+                                                    }
+                                                  @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
+
+                                                    @if(key.indexOf(".trg")>=0){
+                                                      @if(!colorSelectedFunctions.isEmpty()){
+                                                        @if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
+
+                                                          <div class="panel-body selected" id="@key">
+                                                            <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                            <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+                                                          </div>
+                                                        }else{
+                                                          <div class="panel-body" id="@key">
+                                                            <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                            <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+
+                                                          </div>
+                                                        }
+                                                      }else{
+                                                        <div class="panel-body" id="@key">
+                                                          <div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
+                                                          <a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
+                                                        </div>
+                                                      }
+                                                    }<!-- if ends here -->
+                                                    }<!-- for ends here -->
+                                                </div>
+                                                </div>
+
+
+
+
+
+                                                </div>
+
+
+                                              }
+                                      }
+
+
+
+
+
+                                    }<!--end of search_string for -->
+                                    }<!-- end of if -->
+                                </div>
+                                </div>
+                                </div>
+
+                                </div>
+                            </div><!-- area_result_card ends -->
+                            }
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- tab1 end -->
+
+
+                  @*<div role="tabpanel" class="tab-pane" id="tab2" style="height: 100%">*@
+                  @**@
+                  @*<div class="card-body no-padding">*@
+                  @*<div class="row no-gap">*@
+                  @*<div class="col-xs-12">*@
+                  @*<div class="panel-group">*@
+
+                  @*<div class="col-xs-12">*@
+                  @*<div class="card" style="margin-top: 2%;">*@
+                  @*<div style="margin-top: 5%;">*@
+                  @*<b>With Reference to RMS 16_0</b>*@
+                  @*</div> *@
+                  @*<div class="card-body no-padding">*@
+                  @*<table class="table table-striped table-bordered table-hover">*@
+                  @*<thead>*@
+                  @*<tr>*@
+                  @*<th>File Name</th>*@
+                  @*<th>Package Name</th>*@
+                  @*<th>Internal Procedures</th>*@
+                  @*<th>Internal Functions</th>*@
+                  @*</tr>*@
+                  @*</thead>*@
+                  @*<tbody id="Utilities_datatable">*@
+                  @**@
+
+                  @*</tbody>*@
+                  @*</table>*@
+                  @*</div>*@
+                  @*</div>*@
+                  @*</div> <!-- end of col -->*@
+
+                  @*</div>*@
+                  @*</div>*@
+                  @*</div>*@
+                  @*</div>*@
+                  @*</div>*@
+
+
+
+
+
+
+                </div>
+
+                  <!-- vibhor -->
+              </div><!--loader ends -->
+
+
+
+            </div><!--card ends -->
+          </div>
+        </div>
+
+
+
+
+      </div><!-- app container -->
+    </div><!-- app- default -->
+    </div><!-- main_card_body -->
+    <script type="text/javascript">
+
+            var CLIENT_IP='@ajax_CLIENT_IP';
+            var names;
+            var UtilityCallInterval;
+            var SystemReadyCallInterval;
+            var Utilities_html="";
+            function init()
+            {
+              document.getElementById("stop_search_button").disabled = true;
+              document.getElementById("main_search_button").disabled = true;
+              document.getElementById("searchString").disabled 	   = true;
+              document.getElementById("repoList").disabled 		   = true;
+              showLoader("Initialising, please wait...");
+              $('#search_duration').html("00:00:00");
+              populateReleaseList();
+              //getPastSearches();
+              // 	UtilityCallInterval=setInterval(function(){ getUtilityFilePkgName(UtilityCallInterval)  }, 1000);
+              SystemReadyCallInterval=setInterval(function(){ getSystemReadyStatus(SystemReadyCallInterval)  }, 500);
+
+              //getUtilityFilePkgName();
+            }
+
+            function pathterminator(ajax_CLIENT_IP,level_count,key){
+              // console.log("PathTerm VIbhor:  "+ajax_CLIENT_IP+"  "+level_count+"  "+key);
+
+
+              var myURL="/ajax/"+ajax_CLIENT_IP+"/pathterminators/"+level_count+"/"+key;
+
+                $.ajax({
+
+                  url: myURL,
+                  async: true,
+                  success:function(data){
+                     console.log("PathTerm: "+data);
+
+                     var parts=data.split("<!-- vibhor -->");
+                      $('#main_card_body').html(parts[1]);
+
+                    // getPastSearches();
+                    populateReleaseList();
+                    $('#search_duration').html(elapsedTimeValue);
+
+
+                  }
+                });
+            }
+
+            function disableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
+
+              document.getElementById("searchString").disabled 	   = true;
+              document.getElementById("repoList").disabled 		   = true;
+            }
+
+            function enableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
+              document.getElementById("searchString").disabled 	   = false;
+              document.getElementById("repoList").disabled 		   = false;
+            }
+
+
+            window.onunload = function (event) {
+                var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
+                $.ajax({
+
+                url: myURL,
+                async: false,
+                success:function(data){
+
+                }
+              });
+            };
+
+            function showLoader(content)
+            {
+              var loader_icon='<div class="loader-container text-center">'+
+                      '<div class="icon">'+
+                      '<div class="sk-wave">'+
+                      '<div class="sk-rect sk-rect1">'+'</div>'+
+                      '<div class="sk-rect sk-rect2">'+'</div>'+
+                      '<div class="sk-rect sk-rect3">'+'</div>'+
+                      '<div class="sk-rect sk-rect4">'+'</div>'+
+                      '<div class="sk-rect sk-rect5">'+'</div>'+
+                      '</div>'+
+                      '</div>'+
+                      '<div class="title" id="loader_title"></div>'+
+                      '</div>';
+              $('#loader').attr("class", "card-body __loading");
+              $('#loader_icon').html(loader_icon);
+              $('#loader_icon1').html(loader_icon);
+              $('#loader_title').html(content);
+            }
+            function removeLoader()
+            {
+              $('#loader').attr("class", "card-body");
+              $('#loader_icon').html("");
+              $('#loader_icon1').html("");
+              $('#loader_title').html("");
+            }
+            function getSystemReadyStatus(SystemReadyCallInterval)
+            {
+              var myURL="/ajax/"+CLIENT_IP+"/SystemReady";
+
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(data){
+                  if(data==0)
+                  {
+                    document.getElementById("main_search_button").disabled = false;
+                    document.getElementById("searchString").disabled 	   = false;
+                    document.getElementById("repoList").disabled 		   = false;
+                    removeLoader();
+                    clearInterval(SystemReadyCallInterval);
+                  }
+
+                }
+              });
+
+            }
+
+
+            var utility_file_func_map={};
+            function getUtilityAllFuncAndProcsInFile(index,type)
+            {
+              var PkgName=getPkgNameAtIndex(index);
+              var divId;
+              if(type==1)
+              {
+                divId="#"+PkgName+"_proc";
+                type="PROCEDURE";
+              }
+              else
+              if(type==2)
+              {
+                divId="#"+PkgName+"_func";
+                type="FUNCTION";
+              }
+
+              if(PkgName in utility_file_func_map)
+              {
+
+                $(divId).html(utility_file_func_map[PkgName]);
+              }
+              else
+              {
+
+                var myURL="/ajax/"+CLIENT_IP+"/UtilityAllFuncAndProcsInFile/"+PkgName+"/"+type;
+
+                $.ajax({
+
+                  url: myURL,
+                  async: true,
+                  success:function(data){
+                    // console.log(divId+" ---"+data);
+                    utility_file_func_map[PkgName]=data;
+                    $(divId).html(data);     //put respective func on proc in the collapsible item
+                  }
+                });
+              }
+            }
+
+            function getPkgNameAtIndex(index)
+            {
+              for(var i=0;i<allFilesInUtility.length;i++)
+              {
+                if(index==i)
+                {
+                  return allFilesInUtility[i];
+                }
+              }
+            }
+
+            var allFilesInUtility=[];
+            var callCount=1;
+            function getUtilityFilePkgName(UtilityCallInterval) {
+
+              // console.log("Calling: "+callCount);
+//se-rms-13_2_10 type
+              var repoName="se-rms-16_0_x1";
+              var myURL="/ajax/"+CLIENT_IP+"/UtilityFilePkgName/"+repoName;
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(data){
+                  // alert(data);
+
+
+                  var i=0;
+
+                  for (var p in data) {
+
+                    if( data.hasOwnProperty(p) ) {
+
+                      var fileName=p.substring(p.lastIndexOf("\\")+1,p.length);
+                      var pkgName=data[p].toString();
+                      if(!allFilesInUtility.includes(pkgName))   //add pkgName
+                        allFilesInUtility.push(pkgName);
+
+
+                      Utilities_html+='<tr>'+
+                              '<td>' + fileName   +'</td>'+
+                              '<td>' + pkgName    +'</td>'+
+                              '<td>'+
+
+                              '<div class="panel panel-default">'+
+                              '<div class="panel-heading collapsed" data-toggle="collapse" href="#'+pkgName+'_proc" onclick="getUtilityAllFuncAndProcsInFile('+i+',1)">'+
+                              '<h4 class="panel-title" style="font-size: 14px;">'+
+                              'Get Procedures'+
+                              '</h4>'+
+                              '</div>	'+
+                              '<div id="'+pkgName+'_proc" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;padding: 8px;text-align: left;cursor:default">'+
+
+
+
+                              '</div>'+
+                              '</div>'+
+
+
+                              '</td>'+
+                              '<td>'+
+
+                              '<div class="panel panel-default">'+
+
+
+                              '<div class="panel-heading collapsed" data-toggle="collapse" href="#'+pkgName+'_func" onclick="getUtilityAllFuncAndProcsInFile('+i+',2)">'+
+                              '<h4 class="panel-title" style="font-size: 14px;">'+
+                              'Get Functions'+
+                              '</h4>'+
+                              '</div>	'+
+                              '<div id="'+pkgName+'_func" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;padding: 8px;text-align: left;cursor:default">'+
+
+
+                              '</div>'+
+                              '</div>'+
+
+
+                              '</td>'+
+
+                              '</tr>';
+                      i++;
+
+
+                    } //end if hasOwnProp
+                  }
+
+
+
+                }
+              });
+
+              callCount++;
+              if(callCount==10)
+              {
+                $("#Utilities_datatable").html(Utilities_html);
+                // console.log("Cleared: "+callCount);
+                callCount=1;
+                clearInterval(UtilityCallInterval);
+              }
+              else
+              {
+                var loading='<tr><td>Loading in '+(9-callCount)+' seconds..</td><td></td><td></td><td></td></tr>';
+                $("#Utilities_datatable").html(loading);
+              }
+
+
+
+            }
+            function setUtilitiesTab()
+            {
+              console.log("Called from new:  "+Utilities_html);
+              $("#Utilities_datatable").html(Utilities_html);
+            }
+
+
+            function populateReleaseList()
+            {
+              // populate the release list
+              var temp="@selectRepoList";
+
+
+              temp=temp.substr(1,temp.length-2);
+              var tempArray=temp.split(",");
+
+              var x = document.getElementById("repoList");
+
+              // emptying the list then adding
+              $('#repoList').find('option').remove();
+              // adding a default field
+              var option = document.createElement("option");
+              var txt="Please Select..";
+              option.text = txt;
+              option.id=txt;
+              x.add(option);
+
+              // adding actual list elements
+              for(var i=0;i<tempArray.length;i++)
+              {
+                // console.log("cc: "+tempArray[i]);
+                var option = document.createElement("option");
+                var txt=tempArray[i].substr(tempArray[i].indexOf("-")+1,tempArray[i].length);
+                option.text = txt;
+                option.id=txt;
+                x.add(option);
+
+              }
+            }
+
+            function selectRelease(repoName)
+            {
+              document.getElementById(repoName).selected=true;
+            }
+            // function getPastSearches()
+            // {
+
+
+            // if(selRepo!=null)
+            // {
+            // 	selectRelease(selRepo);
+            // }
+            //   var myURL="/ajax/"+CLIENT_IP+"/getPastSearchesList";
+            //   var html="";
+            // 	$.ajax({
+
+            // 	url: myURL,
+            // 	async: true,
+            // 	success:function(data){
+            // 	  	  names=data.split(';');
+            // 	  	 // console.log(names.length+" "+names[0]+" "+names[1]+" "+names[2]+" "+names[3]+" ");
+            // 	  	 for(var i=names.length-2;i>=0;i--)
+            // 	  	 {
+
+            // 	  	  var parts=names[i].split("__");
+            // 	  	  var timestamp=parts[0];
+            // 	  	  var searchString=parts[1];
+            // 	  	  var repo=parts[2].toString().toUpperCase();
+            // 	  	  repo=repo.substring(0,repo.indexOf(".SER"));
+            // 	  	  html+='<tr><td style="cursor: hand;" onclick="loadThisSearch('+i+')"><p style="color: green">'+(i+1)+'# '+searchString+'</p>'+repo+'<br><a href="">'+timestamp+'</a></td></tr>';
+            //         		 }
+            //         	document.getElementById("pastSearches").innerHTML=html;
+
+
+            // 		}
+            // });
+            // }
+
+            // function loadThisSearch(searchNameID)
+            // {
+            // // alert("sn: "+names[searchNameID]);
+
+            // 	$.ajax({
+
+            // 						url: '/ajax/"+CLIENT_IP+"/loadThisSearch/'+searchNameID,
+            // 						async: true,
+            // 						success:function(data){
+            // 						// alert(data);
+            // 						var parts=data.split("<!-- vibhor -->");
+
+            // 						//alert(parts2[1]);
+            // 						 //alert(parts[1]);
+
+            // 						$('#main_card_body').html(parts[1]);
+            // 						$('#loader').attr("class", "card-body __loading");
+            // 						// getPastSearches();
+            // 						//$('#test').html(data);
+
+
+            // 				}
+            // 		});
+            // }
+            function remove_modal() {
+
+              $("#warning").hide();
+            }
+
+            function viewFile(fileName){
+
+
+
+
+            }
+
+
+            function GetTextboxCordinates(id) {
+
+              var txt = document.getElementById(id);
+
+
+              getPos(txt);
+              //drawEdge(361,437,500,600);
+              // alert("X:" + p.x + " Y:" + p.y);
+            }
+
+            function getPos(el) {
+              // yay readability
+              var midPoint=15;
+              var len=el.innerHTML.offsetLeft;
+              var height=el.offsetHeight;
+              for (var lx=0, ly=0;
+                   el != null;
+                   lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+              // alert("gp  X:" + lx + " Y:" + ly);
+              drawEdge(lx+len+10,ly+height/2,lx+len+10,ly+height/2+15);
+              //return {x: lx,y: ly};
+            }
+            function drawEdge(ax,ay,bx,by)
+            {
+
+              if(ay>by)
+              {
+                bx=ax+bx;
+                ax=bx-ax;
+                bx=bx-ax;
+                by=ay+by;
+                ay=by-ay;
+                by=by-ay;
+              }
+              var calc=Math.atan((ay-by)/(bx-ax));
+              calc=calc*180/Math.PI;
+              var length=Math.sqrt((ax-bx)*(ax-bx)+(ay-by)*(ay-by));
+              document.body.innerHTML += "<div id='line' style='height:" + length + "px;width:1px;background-color:black;position:absolute;top:" + (ay) + "px;left:" + (ax) + "px;transform:rotate(" + calc + "deg);-ms-transform:rotate(" + calc + "deg);transform-origin:0% 0%;-moz-transform:rotate(" + calc + "deg);-moz-transform-origin:0% 0%;-webkit-transform:rotate(" + calc  + "deg);-webkit-transform-origin:0% 0%;-o-transform:rotate(" + calc + "deg);-o-transform-origin:0% 0%;'></div>"
+            }
+            function printMousePos(event) {
+              alert(event.clientX+"  "+ event.clientY);
+
+            }
+
+            /******* For Filter Options *********/
+
+            var LList=[];
+            var RList=[];
+
+
+            function filterInit()
+            {
+              //    LList.push("/Batch/Proc/Source");
+              // LList.push("/Cross_Pillar/procedures/source");
+              // LList.push("/Financials/packages/source");
+
+              var myURL="/ajax/"+CLIENT_IP+"/filterOptions/DEFAULT/none";
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(filtersData){
+                  // console.log("filterInit: DEFAULT: "+filtersData["type"]);
+                  // console.log("filterInit: "+filtersData["PLS"]);
+                  // console.log("filterInit: "+filtersData["FMB"]);
+                  // console.log("filterInit: "+filtersData["OTHER"]);
+
+                  var PLS=filtersData["PLS"];
+                  for(var p in PLS)
+                  {
+                    if(!listContains("multiRight",PLS[p]))
+                      LList.push(PLS[p]);
+                  }
+
+                  var FMB=filtersData["FMB"];
+                  for(var p in FMB)
+                  {
+                    if(!listContains("multiRight",FMB[p]))
+                      LList.push(FMB[p]);
+                  }
+
+
+                  var OTHER=filtersData["OTHER"];
+                  for(var p in OTHER)
+                  {
+                    if(!listContains("multiRight",OTHER[p]))
+                      LList.push(OTHER[p]);
+                  }
+
+                  populateList("multiLeft",LList);
+                  populateList("multiRight",RList);
+                }
+              });
+
+
+
+
+            }
+            function populateList(listId,list)
+            {
+
+              var List=document.getElementById(listId);
+              for(var i=0;i<list.length;i++)
+              {
+                var option=document.createElement("option");
+                option.text=list[i];
+                if(!listContains(listId,list[i]))
+                {
+                  List.add(option);
+                }
+              }
+
+            }
+            function clearList(listId,list)
+            {
+              var List=document.getElementById(listId);
+              $("#"+listId+" > option").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                  var selText = $this.text();
+                  var option=document.createElement("option");
+                  option.text=selText;
+                  List.remove(option);
+                }
+              });
+
+            }
+            function displayPopUp(heading,content)
+            {
+
+
+              //Does not contain submit button
+              if(heading=="Notice" || heading=="Error")
+              {
+
+                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px' id='pop_up'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;'><div class='modal-content' id='pop_up_content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;word-wrap:break-word;'><h4>"+content+"</h4></div></div></div></div></div>";
+                $('#pop_up').delay(2000).fadeOut(1500);
+              }
+              else
+              {
+                //Contains submit button
+                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;margin-left: 10%;margin-right: 10%;'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;height:300px;word-wrap:break-word;'>"+content+"</div><div class='modal-footer'><button type='button' class='btn btn-sm btn-default' onclick='moreOptionsSubmit()' style='color:white'>Submit</button><button type='button' class='btn btn-sm btn-default' onclick='remove_modal()' style='color:white'>Close</button></div></div></div></div></div>";
+              }
+              //Keep selected filter options intact
+
+              if(heading=="Filters")
+              {
+
+                if(filters!="")
+                {
+                  console.log("filters: "+filters);
+                  var parts=filters.split("-");
+
+                  if(parts[0]==1)
+                    $('#checkbox1').prop('checked', true);
+                  else
+                    $('#checkbox1').prop('checked', false);
+                  if(parts[1]==1)
+                    $('#checkbox2').prop('checked', true);
+                  else
+                    $('#checkbox2').prop('checked', false);
+                  if(parts[2]==1)
+                    $('#checkbox3').prop('checked', true);
+                  else
+                    $('#checkbox3').prop('checked', false);
+                  if(parts[3]==1)
+                    $('#checkbox4').prop('checked', true);
+                  else
+                    $('#checkbox4').prop('checked', false);
+                  if(parts[4]==1)
+                    $('#checkbox5').prop('checked', true);
+                  else
+                    $('#checkbox5').prop('checked', false);
+
+
+                }
+
+              }
+
+
+
+
+
+            }
+            function moreOptions()
+            {
+
+              // var heading="<div class='row'><div class='col-md-12' style='color: #7a8690;'><b>By Directory </b></div></div>";
+              var heading="<div class='row'><div class='col-md-12' style='color: #7a8690;'><b></b></div></div>";
+
+              var byType="<div class='row'><div class='col-md-12' style='color: #7a8690;'><b>By Type </b></div><br><div class='col-md-4'></div><div class='col-md-4' style='border: 2px solid #f2f5f7;'>"+
+                      "<div class='checkbox' style='text-align:'>"+
+                      "<input type='checkbox' id='checkbox1'>"+
+                      "<label for='checkbox1'>Packages <b>[pls]</b>"+
+                      "</label>"+
+                      "</div>"+
+                      "<div class='checkbox'>"+
+                      "<input type='checkbox' id='checkbox2'>"+
+                      "<label for='checkbox2'>Forms <b>[fmb,mmb]</b>"+
+                      "</label>"+
+                      "</div>"+
+                      "<div class='checkbox'>"+
+                      "<input type='checkbox' id='checkbox3'>"+
+                      "<label for='checkbox3'>Batches <b>[pc]</b>"+
+                      "</label>"+
+                      "</div>"+
+                      "<div class='checkbox'>"+
+                      "<input type='checkbox' id='checkbox4'>"+
+                      "<label for='checkbox4'>Triggers <b>[trg]</b>"+
+                      "</label>"+
+                      "</div>"+
+                      "<div class='checkbox'>"+
+                      "<input type='checkbox' id='checkbox5'>"+
+                      "<label for='checkbox5'>Other <b>[h,mk,c,ksh,d,lib,sql,ctl,tmp,SQL,dat,cfg,seq,pll]</b>"+
+                      "</label>"+
+                      "</div>"+
+                      "</div><div class='col-md-4'></div><br></div>";
+
+
+
+              var byDirLeft="<div class='col-md-6' style='color: #7a8690;'><b>All </b></div><div class='col-md-3' style='color: #7a8690;'><b>Selected </b></div>"+
+                      "<div class='col-md-6' style='border: 2px solid #f2f5f7;padding: 2%;'>"+
+                      "<select id='multiLeft' style='height: 80%;min-width: 100%;' multiple>"+
+
+                      "</select>"+
+                      "<div class='row'><button type='button' class='btn btn-sm btn-default' onclick='L2RSingle()' style='color:white;margin: 5px;background-color: rgba(165, 155, 163, 0.86);'><b>></b></button>"+
+                      "<button type='button' class='btn btn-sm btn-default' onclick='L2RMulti()' style='color:white;margin: 5px;background-color: rgba(165, 155, 163, 0.86);'><b>>></b></button></div>"+
+
+                      "</div>";
+
+              var byDirRight="<div class='col-md-6' style='border: 2px solid #f2f5f7;padding: 2%;'>"+
+                      "<select id='multiRight' style='height: 80%;min-width: 100%;' multiple>"+
+
+                      "</select>"+
+                      "<div class='row'><button type='button' class='btn btn-sm btn-default' onclick='R2LMulti()' style='color:white;margin: 5px;background-color: rgba(165, 155, 163, 0.86);'><b><<</b></button>"+
+                      "<button type='button' class='btn btn-sm btn-default' onclick='R2LSingle()' style='color:white;margin: 5px;background-color: rgba(165, 155, 163, 0.86);'><b><</b></button></div>"+
+                      "</div>";
+
+              // var content=heading+byDirLeft+byDirRight+byType;
+              var content=heading+byType;
+              displayPopUp("Filters",content);
+              filterInit();
+              //window.location="/ajax/"+CLIENT_IP+"/index";
+            }
+
+            var filters="1-1-1-1-1-";   //initially
+            function moreOptionsSubmit()
+            {
+              //first four for type then follow the directories
+              filters="";
+              var packages_sel=document.getElementById("checkbox1").checked?1:0;
+              var forms_sel	=document.getElementById("checkbox2").checked?1:0;
+              var batches_sel	=document.getElementById("checkbox3").checked?1:0;
+              var triggers_sel=document.getElementById("checkbox4").checked?1:0;
+              var others_sel  =document.getElementById("checkbox5").checked?1:0;
+
+              filters+=(packages_sel)+"-";
+              filters+=(forms_sel)+"-";
+              filters+=(batches_sel)+"-";
+              filters+=(triggers_sel)+"-";
+              filters+=(others_sel)+"-";
+
+              // var directories_sel=document.getElementById("multiRight").options;
+              // for(var i=0;i<directories_sel.length;i++)
+              //   {
+              //   	var path=directories_sel[i].text;
+              //   	while(path.indexOf("/")>=0)
+              //   	{
+              //   		path=path.replace("/","+")
+              //   	}
+
+              //   	filters+=path+"-";
+              //   }
+
+              // console.log("Filters: "+filters)
+              var myURL="/ajax/"+CLIENT_IP+"/filterOptions/USER-SET/"+filters;
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(filtersData){
+                  // console.log("filterInit: USER-SET: "+filtersData["type"]);
+                  // console.log("filterInit: "+filtersData["PLS"]);
+                  // console.log("filterInit: "+filtersData["FMB"]);
+                  // console.log("filterInit: "+filtersData["OTHER"]);
+
+                }
+              });
+              remove_modal();
+
+            }
+
+
+            function L2RSingle()
+            {
+
+              var rightList=document.getElementById("multiRight");
+              var leftList=document.getElementById("multiLeft");
+              $("#multiLeft option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                  var selText = $this.text();
+                  var option=document.createElement("option");
+                  option.text=selText;
+
+                  if(!listContains("multiRight",selText))
+                  {
+
+
+                    LList.splice(LList.indexOf(selText),1);
+                    RList.push(selText);
+
+
+
+
+                  }
+
+                }
+              });
+              clearList("multiLeft",LList);
+              clearList("multiRight",RList);
+
+              populateList("multiLeft",LList);
+              populateList("multiRight",RList);
+
+            }
+
+            function R2LSingle()
+            {
+
+              var rightList=document.getElementById("multiRight");
+              var leftList=document.getElementById("multiLeft");
+              $("#multiRight option:selected").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                  var selText = $this.text();
+                  var option=document.createElement("option");
+                  option.text=selText;
+
+                  if(!listContains("multiLeft",selText))
+                  {
+
+
+                    RList.splice(RList.indexOf(selText),1);
+                    LList.push(selText);
+
+                    clearList("multiLeft",LList);
+                    clearList("multiRight",RList);
+
+                    populateList("multiLeft",LList);
+                    populateList("multiRight",RList);
+
+                  }
+
+                }
+              });
+
+            }
+            function L2RMulti()
+            {
+
+              var rightList=document.getElementById("multiRight");
+              var leftList=document.getElementById("multiLeft");
+
+              for(var i=0;i<LList.length;i++)
+              {
+
+                var option=document.createElement("option");
+                option.text=LList[i];
+
+                if(!listContains("multiRight",LList[i]))
+                  RList.push(LList[i]);
+
+              }
+              clearList("multiRight",RList);
+              populateList("multiRight",RList);
+              clearList("multiLeft",LList);
+              LList.splice(0,LList.length);
+
+            }
+            function R2LMulti()
+            {
+
+              var rightList=document.getElementById("multiRight");
+              var leftList=document.getElementById("multiLeft");
+
+              for(var i=0;i<RList.length;i++)
+              {
+
+                var option=document.createElement("option");
+                option.text=RList[i];
+
+                if(!listContains("multiLeft",RList[i]))
+                  LList.push(RList[i]);
+
+              }
+              clearList("multiLeft",LList);
+              populateList("multiLeft",LList);
+              clearList("multiRight",RList);
+              RList.splice(0,RList.length);
+
+            }
+            function listContains(listId,option)
+            {
+
+              var flag=false;
+              $("#"+listId+" > option").each(function () {
+                var $this = $(this);
+                if ($this.length) {
+                  var selText = $this.text();
+                  if(selText==option)
+                    flag=true;
+
+
+                }
+              });
+              return flag;
+            }
+
+
+            /***** Refresh page *****************************/
+
+            function refreshPage()
+            {
+              window.location.replace('/');
+            }
+
+
+            /***** mainSearch on the left and right both ****/
+
+            var percent,selRepo,callElapsed,searchString,level_count1,key1,func_title1,type1;
+            var allSearchStrings=[];                              //keeps track of strings searched till now
+            function mainSearch(type,level_count,key,func_title)
+            {
+              type1=type;
+              level_count1=level_count;
+              key1=key;
+              func_title1=func_title;
+
+              $('#repoList').attr('style','border: 1px solid #c8d1d3');
+              $('#searchString').attr('style','border: 1px solid #c8d1d3');
+
+
+              //Default Filters
+
+
+              var content;
+              var alreadySearchedFlag=false;
+              $('#search_duration').html("00:00:00");
+              $('#current_path_area').html("");
+              var myURL,flag=0;
+              //lert("@selectedRepository");
+              percent=0;
+              searchString=document.getElementById("searchString").value;
+
+
+              $("#repoList option:selected").each(function () {
+                        var $this = $(this);
+                        if ($this.length) {
+//                            debugger;
+                            if($this.text()!="Please Select..")
+                              selRepo = $this.text();
+                          }
+                      }
+              );
+
+
+//                 var myURL="/ajax/"+CLIENT_IP+"/isStringAlreadySearched/"+searchString;
+//                 $.ajax({
+//
+//                   url: myURL,
+//                   async: true,
+//                   success:function(data){
+//                     console.log("Left: "+data+"  String: "+searchString);
+//
+//                     if(data)
+//                     {
+//                       alreadySearchedFlag=true;
+//                       console.log("left Inside alreadySearchedFlag: "+alreadySearchedFlag);
+//
+//                       content="<h3>The string is already searched!</h3>";
+//                       displayPopUp("Notice",content);
+//                       return;
+//                     }else{
+//                       alreadySearchedFlag=false;
+//                     }
+//
+//                   }
+//                 });
+
+
+
+              if(type=="left")
+              {
+
+                allSearchStrings=[]; // For a new search it should be empty
+//                 debugger;
+//                 if(!allSearchStrings.includes(searchString+"/"+selRepo))
+//                 {
+//                 	allSearchStrings.push(searchString+"/"+selRepo);
+//                 }
+                 // Should be removed as left initiates new search
+//                 else
+//                 {
+//                    alreadySearchedFlag=true;
+//                 	content="The string is already searched!";
+//                 	displayPopUp(content);
+//                 	return;
+//                 }
+
+                if(selRepo=="Please Select.." && searchString.trim().length==0)
+                {
+                  content="Missing: Search String & Release";
+                  $('#repoList').attr('style','border:2px solid red');
+                  $('#searchString').attr('style','border:2px solid red');
+                  displayPopUp("Error",content);
+                }
+                else
+                if(selRepo=="Please Select..")
+                {
+                  content="Missing: Release";
+                  $('#repoList').attr('style','border:2px solid red');
+                  displayPopUp("Error",content);
+                }
+                else
+                if(searchString.trim().length==0)
+                {
+                  content="Missing: Search String";
+                  $('#searchString').attr('style','border:2px solid red');
+                  displayPopUp("Error",content);
+                }
+                else
+                {
+                    var myURL="/ajax/"+CLIENT_IP+"/setSearchString/"+searchString;
+
+                    $.ajax({
+
+                      url: myURL,
+                      async: true,
+                      success:function(data){
+                        console.log(data);
+
+                      }
+                    });
+                  myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
+                  flag=1;
+                }
+              }// if type left
+              else
+              {
+
+//                 var myURL="/ajax/"+CLIENT_IP+"/isStringAlreadySearched/"+key+"-"+func_title;
+//                 $.ajax({
+//
+//                   url: myURL,
+//                   async: true,
+//                   success:function(data){
+//                     if(data)
+//                     {
+//                        alreadySearchedFlag=true;
+//                       console.log("not left Inside alreadySearchedFlag: "+alreadySearchedFlag);
+//
+//                       content="<h3>The string is already searched!</h3>";
+//                       displayPopUp("Notice",content);
+//                       return;
+//                     }else{
+//                       alreadySearchedFlag=false;
+//                     }
+//                         console.log("Not left: "+data+"  String: "+key+"-"+func_title+"  alreadySearchedFlag: "+alreadySearchedFlag);
+//
+//                   }
+//
+//                 });
+//                debugger;
+//                 if(!allSearchStrings.includes(key+'-'+func_title+"/"+selRepo))
+//                 {
+//                 	allSearchStrings.push(key+'-'+func_title+"/"+selRepo);
+//                 }
+//                 else
+//                 {
+//                    alreadySearchedFlag=true;
+//                 	content="This string is already searched!";
+//                 	displayPopUp(content);
+//                 	return;
+//                 }
+
+                myURL="/ajax/"+CLIENT_IP+"/newsearch/"+level_count+"/"+key+"-"+func_title; // if not left
+                flag=1;
+
+              }
+
+//              disableLeftPanel(); //Disabled for entire search of this main string
+
+              //alert("type: "+type+" level_count: "+level_count+" key: "+key+" func_title: "+func_title);
+              //alert("url: "+myURL);
+
+
+
+
+              debugger;
+//              if(flag==1 && !alreadySearchedFlag)
+              if(flag==1)
+              {
+                flag=0;
+//                alreadySearchedFlag=false;
+                initiateSearching(myURL,type,level_count,key,func_title);
+
+              }//flag
+            }
+
+            function  initiateSearching(myURL,type,level_count,key,func_title){
+
+                var alreadySearchedString=false;
+                 //Initiates the search whether new or main
+                $.ajax({
+
+                  url: myURL,
+                  async: true,
+                  success:function(data){
+
+                      // data can be entire page length around 7500, data length 100 for already search to be displayed only
+                    debugger;
+                          if(data.length<100) {
+                            displayPopUp("Notice", data);
+                            return;
+                          }
+                            myURL = "/ajax/" + CLIENT_IP + "/progress";
+                            $.ajax({
+
+                              url: myURL,
+                              async: true,
+                              success: function (data) {
+
+                                var loader_icon = '<div class="loader-container text-center">' +
+                                        '<div class="icon">' +
+                                        '<div class="sk-wave">' +
+                                        '<div class="sk-rect sk-rect1">' + '</div>' +
+                                        '<div class="sk-rect sk-rect2">' + '</div>' +
+                                        '<div class="sk-rect sk-rect3">' + '</div>' +
+                                        '<div class="sk-rect sk-rect4">' + '</div>' +
+                                        '<div class="sk-rect sk-rect5">' + '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="title" id="loader_title"></div>' +
+                                        '</div>';
+                                $('#loader').attr("class", "card-body __loading");
+                                $('#loader_icon').html(loader_icon);
+                                $('#loader_icon1').html(loader_icon);
+                                // $('#loader_title').html(progressString);
+                                var call = setInterval(function () {
+                                  getProgress(call, type, level_count, key, func_title)
+                                }, 500);
+                                //console.log("main : percent: "+percent);
+
+
+                              }
+                            });
+
+
+                            //for elapsed time
+                            callElapsed = setInterval(function () {
+                              getElapsedSearchTime()
+                            }, 500);
+
+
+
+                  }
+                });
+
+
+
+
+
+            }
+
+            /******** Progress Bar *********/
+
+
+            var zeroProgressCounter=0;                 //If consecutive 10 times 0 progress, then force stop.
+            function getProgress(call,type,level_count,key,func_title)
+            {
+              var myURL="/ajax/"+CLIENT_IP+"/progress";
+
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(data){
+                  //alert(data);
+                  console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
+                  if(data==="-1" || zeroProgressCounter==10){
+                      forceStop=1;
+                      console.log("force stop: "+forceStop+"  zeroProgressCounter: "+zeroProgressCounter);
+                      zeroProgressCounter=0;
+                      return;
+                  }
+
+                  percent=Number(data);
+                  if(parseInt(percent)==0)
+                    zeroProgressCounter++;
+
+                  $('#progress_bar').css('width', percent+'%');
+
+                  var progressString="Searching <b>"+searchString+"</b> in <b>'"+selRepo+"'</b> ("+percent.toFixed(2)+"%)";
+                  $('#loader_title').html(progressString);
+                  //console.log("percent2: "+percent);
+
+                }
+              });
+
+              if(percent>=100 || forceStop==1)
+              {
+                  console.log("inside");
+                forceStop=0;
+                document.getElementById("main_search_button").disabled = false;
+//                document.getElementById("searchString").disabled 	   = false;
+//                document.getElementById("repoList").disabled 		   = false;
+                document.getElementById("stop_search_button").disabled = true;
+                clearInterval(call);
+                $('#loader').attr("class", "");
+                $('#loader_icon').html("");
+
+                //window.location="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;
+                $.ajax({
+
+                  url: "/ajax/"+CLIENT_IP+"/test",
+                  async: true,
+                  success:function(data){
+
+                    clearInterval(callElapsed);  //stop polling for elapsed time
+                    var parts=data.split("<!-- vibhor -->");
+
+                    if(parts[1].includes("No results found for this string"))
+                    {
+                     // displayPopUp("Notice","<h3>No further mention for this string</h3>");
+                      var notFoundMessage='<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top: 5%;background-color: rgba(249, 28, 8, 0.81);color: white;">No Results Found For This String!</div>';
+                      $('#area_main_card').html(notFoundMessage);
+                      if(type1=='left')
+                        $('#area_result_card').html('');
+                      var level="@level_count";
+                      console.log("type: "+type1+" level_count: "+level_count1+" key: "+key1+"  func_title: "+func_title1);
+
+                      if(level_count1>1)
+                      {
+                        var myURL="/ajax/"+CLIENT_IP+"/pathterminators/"+level_count1+"/"+key1+"-"+func_title1;
+                        $.ajax({
+
+                          url: myURL,
+                          async: true,
+                          success:function(data){
+                            var parts=data.split("<!-- vibhor -->");
+                            $('#main_card_body').html(parts[1]);
+
+                            // getPastSearches();
+                            populateReleaseList();
+                            $('#search_duration').html(elapsedTimeValue);
+                              }
+                        });
+//                        var timer = setTimeout(function() {
+//                          window.location.href=myURL;
+//                        }, 3400);
+                        // window.location.href = myURL;
+                      }
+                      enableLeftPanel();
+                    }
+                    else
+                      $('#main_card_body').html(parts[1]);
+
+                    // getPastSearches();
+                    populateReleaseList();
+//                    debugger;
+                    if(selRepo){
+                      selectRelease(selRepo);
+                    }
+                    $('#search_duration').html(elapsedTimeValue);
+
+
+                  }
+                });
+
+              }
+              else
+              {
+                document.getElementById("main_search_button").disabled = true;
+                document.getElementById("searchString").disabled 	   = true;
+                document.getElementById("repoList").disabled 		   = true;
+                document.getElementById("stop_search_button").disabled = false;
+              }
+
+            }
+
+            /*********** Stop this search ************/
+            var elapsedTimeValue;
+            var forceStop=0;
+            function stopSearching()
+            {
+              document.getElementById("main_search_button").disabled = false;
+              document.getElementById("searchString").disabled 	   = false;
+              document.getElementById("repoList").disabled 		   = false;
+              document.getElementById("stop_search_button").disabled = true;
+              console.log("Stopping this search");
+
+              //To stop ajax call
+              forceStop=1;
+              removeLoader();
+
+              var myURL="/ajax/"+CLIENT_IP+"/stopSearching";
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(data){
+
+
+                  // var parts=data.split("<!-- vibhor -->");
+
+
+                  // 			clearInterval(callElapsed);//stop polling for elapsed time
+
+                  // 			$('#main_card_body').html(parts[1]);
+                  // 			$('#search_duration').html(elapsedTimeValue);
+
+
+                  // 			// getPastSearches();
+
+
+                }
+              });
+            }
+
+            /***** get elapsed time in this search ****/
+            function getElapsedSearchTime()
+            {
+              var myURL="/ajax/"+CLIENT_IP+"/getElapsedTime";
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success:function(data){
+
+                  elapsedTimeValue=data;
+                  console.log("elapsed: "+elapsedTimeValue);
+
+                  $('#search_duration').html(elapsedTimeValue);
+
+                }
+              });
+            }
+
+
+
+
+    </script>
+
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+
+  </body>
+</html>

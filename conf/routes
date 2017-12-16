@@ -1,0 +1,62 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+#GET     /impact/filterOptions/:operation/:userFilterTypes   			controllers.Application.Filters_options(operation,userFilterTypes)
+#
+#GET     /impact/graph 													controllers.Application.graph()
+#
+#GET     /impact/progress												controllers.Application.progress()
+#
+#GET     /impact/SystemReady												controllers.Application.SystemReady()
+#
+#GET     /impact/UtilityFilePkgName/:repoName							controllers.Application.UtilityFilePkgName(repoName)
+#
+#GET     /impact/UtilityAllFuncAndProcsInFile/:PkgName/:type				controllers.Application.UtilityAllFuncAndProcsInFile(PkgName,type)
+#
+#GET     /impact/isAlreadySearchedAjax/:searchString						controllers.Application.isAlreadySearchedAjax(searchString)
+#
+#GET     /impact/getElapsedTime											controllers.Application.getElapsedTime()
+#
+#GET     /impact/stopSearching    										controllers.Application.stopSearching()
+#
+#GET     /impact/test													controllers.Application.testing2()
+
+GET     /                                                    					controllers.Application.initFrontPage()
+
+GET     /ajax/*callRequestURI                                                  controllers.Application.AjaxCalls(callRequestURI)
+
+#GET     /ajax/:client_ip/indexLoaded											controllers.Application.initFrontPageLoaded(client_ip)
+#
+#GET     /ajax/:client_ip/indexLoading											controllers.Application.initFrontPageLoading(client_ip)
+
+#GET     /impact/setSearchString/:searchString							controllers.Application.setSearchString(searchString)
+#
+#GET     /impact/mainSearch/:visitNum/:ss/:repo      					controllers.Application.mainSearch(visitNum,ss,repo)
+#
+#GET     /impact/newsearch/:level/:func_clicked					        controllers.Application.newSearch(level,func_clicked)
+#
+##GET     /impact/pathterminators/:level/:file_clicked  					controllers.Application.pathTerminators(level,file_clicked)
+#
+#GET     /impact/fileContents/:fileToShow	  							controllers.Application.showFileContents(fileToShow)
+#
+#GET     /impact/status								    				controllers.Application.getGlobalFileCount()
+
+
+
+# Redirects to https://www.playframework.com/ with 303 See Other
+GET   /about      controllers.Default.redirect(to = "https://www.playframework.com/")
+
+# Responds with 404 Not Found
+GET   /orders     controllers.Default.notFound
+
+# Responds with 500 Internal Server Error
+GET   /clients    controllers.Default.error
+
+# Responds with 501 Not Implemented
+GET   /posts      controllers.Default.todo
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

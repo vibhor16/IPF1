@@ -1,0 +1,97 @@
+@(CLIENT_IP: String)
+<html>
+    <head>
+        <title>Impact Path Flow 1.0</title>
+        @*<link rel="icon" href="@routes.Assets.at("images/tab_icon.png")">*@
+        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/flat-admin.css")">
+    </head>
+    <body style="min-height: 0;
+        background-color: white" onload="init()">
+        <div>Client: @CLIENT_IP</div>
+        <div class="initFront">
+                <!--<img style="padding-left:0" src=" @routes.Assets.at("images/init_logo2.png")"/> -->
+            @*<img style="width: 40%; padding: 0px;" src=@routes.Assets.at("images/OracleLogo_init.png")>*@
+            <div style="text-align: center;"><b style="font-size: 55px;">Impact Path Flow</b></div>
+        </div>
+        <div class="loader"></div>
+        <script>
+
+                var CLIENT_IP = '@CLIENT_IP';
+                function init() {
+
+                    var myURL = '/ajax/' + CLIENT_IP + '/indexLoading';
+                    $.ajax({
+
+                        url: myURL,
+                        async: true,
+                        success: function (data) {
+                                console.log("data: "+data);
+                        }
+
+                    });
+
+                    myURL = '/ajax/' + CLIENT_IP + '/indexLoaded';
+                    $.ajax({
+
+                        url: myURL,
+                        async: true,
+                        success: function (data) {
+                            var call = setInterval(function () {
+                                getProgDirTraversed(call)
+                            }, 5000);
+
+                        }
+
+                    });
+
+                }
+
+
+                function getProgDirTraversed(call) {
+
+                    var percent = 0;
+                    var myURL = '/ajax/'+CLIENT_IP+'/indexLoaded';
+                    $.ajax({
+
+                        url: myURL,
+                        async: true,
+                        success: function (data) {
+
+                            percent = Number(data);
+                                console.log("percent: "+percent);
+                             if(percent>=100)
+                              {
+
+                              	clearInterval(call);
+                              	console.log("done");
+                              	window.location.href = "/ajax/"+CLIENT_IP+"/mainSearch/1/a/a"
+                              }
+
+//                            window.setTimeout(function () {
+//
+//                                // Move to a new location or you can do something else
+//                                window.location.href = "/ajax/"+CLIENT_IP+"/mainSearch/1/a/a"
+//                                console.log("done");
+//                            }, 5000);
+
+                        }
+
+                    });
+
+
+                }
+
+                // window.setTimeout(function(){
+
+                // Move to a new location or you can do something else
+                // window.location.href = "/ajax/mainSearch/1/a/a";
+
+                // }, 5000);
+
+        </script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+
+    </body>
+
+</html>

@@ -480,18 +480,18 @@
                                                             @if(colorSelectedFunctions.contains((level_count-1)+"-"+key+"-"+func_title)){
 
 
-                                                              <div class="panel-body selected" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                              <div class="panel-body selected" id="@key-@func_title">
                                                                 <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                               </div>
                                                             }else{
 
 
-                                                              <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                              <div class="panel-body" id="@key-@func_title">
                                                                 <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                               </div>
                                                             }
                                                           }else{
-                                                            <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                            <div class="panel-body" id="@key-@func_title">
                                                               <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                             </div>
                                                           }

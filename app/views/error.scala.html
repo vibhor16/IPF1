@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
     <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+    <script src="@routes.Assets.at("javascripts/jquery3.min.js")"></script>
     @*<link rel="icon" href="@routes.Assets.at("images/tab_icon.png")">*@
  
 </head>
 <body>
-<h2>@error_string</h2>
-
+    <div id="error_msg">
+    </div>
 <script type="text/javascript">
 
         $(document).ready(function() {
+            var ERR_MSG='@error_string';
+            $("#error_msg").html(convert(ERR_MSG));
+
             var CLIENT_IP='@ajax_CLIENT_IP';
             var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
             $.ajax({
@@ -21,6 +25,9 @@
                 async: false
             });
         });
+        function convert(str) {
+            return String(str).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#x27/g, '\'');
+        }
 </script>
 
 </body>

@@ -14,8 +14,7 @@
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
   </head>
@@ -744,19 +743,34 @@
             var UtilityCallInterval;
             var SystemReadyCallInterval;
             var Utilities_html="";
+            $(document).ready(function(){
+                document.getElementById("repoList").disabled=true;
+                $("#searchString").focusout (function () {
+                    if ($("#searchString").val().length>0) {
+                        document.getElementById("repoList").disabled=false;
+                        $("#searchString").attr('style','1px solid #c8d1d3');
+                        }else{
+                        document.getElementById("repoList").disabled=true;
+                        $('#searchString').attr('style','border:2px solid red');
+                    }
+                });
+                $("#repoList").focusout (function () {
+                    selRepo=$( "#repoList option:selected" ).text();
+                    if (selRepo!="Please Select..") {
+                        $("#repoList").attr('style','1px solid #c8d1d3');
+                    }else{
+                        $('#repoList').attr('style','border:2px solid red');
+                    }
+                });
 
-            $(document).ready(function() {
-              $("#repoList").prop('disable', true);
-              $("#searchString").blur(function () {
-                if (!$("#searchString").val()) {
-                  $("#repoList").prop('disable', false);
-                }
-              });
-            })
+            });
+
+
             function init()
             {
               document.getElementById("stop_search_button").disabled = true;
               document.getElementById("main_search_button").disabled = true;
+
 //              document.getElementById("searchString").disabled 	   = true;
 //              document.getElementById("repoList").disabled 		   = true;
               showLoader("Initialising, please wait...");
@@ -767,7 +781,6 @@
               SystemReadyCallInterval=setInterval(function(){ getSystemReadyStatus(SystemReadyCallInterval)  }, 500);
 
               //getUtilityFilePkgName();
-              debugger;
 
             }
 
@@ -861,7 +874,6 @@
                   {
                     document.getElementById("main_search_button").disabled = false;
                     document.getElementById("searchString").disabled 	   = false;
-                    document.getElementById("repoList").disabled 		   = false;
                     removeLoader();
                     clearInterval(SystemReadyCallInterval);
                   }
@@ -1589,16 +1601,7 @@
               percent=0;
               searchString=document.getElementById("searchString").value;
 
-
-              $("#repoList option:selected").each(function () {
-                        var $this = $(this);
-                        if ($this.length) {
-//                            debugger;
-                            if($this.text()!="Please Select..")
-                              selRepo = $this.text();
-                          }
-                      }
-              );
+              selRepo=$( "#repoList option:selected" ).text();
 
 
 //                 var myURL="/ajax/"+CLIENT_IP+"/isStringAlreadySearched/"+searchString;
@@ -1644,6 +1647,7 @@
 //                 	return;
 //                 }
 
+                  debugger;
                 if(selRepo=="Please Select.." && searchString.trim().length==0)
                 {
                   content="Missing: Search String & Release";
@@ -1667,6 +1671,8 @@
                 }
                 else
                 {
+                    $("#searchString").attr('style','1px solid #c8d1d3');
+                    $("#repolist").attr('style','1px solid #c8d1d3');
                     var myURL="/ajax/"+CLIENT_IP+"/setSearchString/"+searchString;
 
                     $.ajax({
@@ -1733,7 +1739,6 @@
 
 
 
-              debugger;
 //              if(flag==1 && !alreadySearchedFlag)
               if(flag==1)
               {
@@ -1755,7 +1760,7 @@
                   success:function(data){
 
                       // data can be entire page length around 7500, data length 100 for already search to be displayed only
-                    debugger;
+
                           if(data.length<100) {
                             displayPopUp("Notice", data);
                             return;
@@ -1987,6 +1992,8 @@
 
 
     </script>
+      <script type="text/javascript" src="@routes.Assets.at("javascripts/vendor.js")"></script>
+      <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
 
 
 

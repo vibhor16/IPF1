@@ -17,13 +17,6 @@
         $(document).ready(function() {
             var ERR_MSG='@error_string';
             $("#error_msg").html(convert(ERR_MSG));
-
-            var CLIENT_IP='@ajax_CLIENT_IP';
-            var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
-            $.ajax({
-                url: myURL,
-                async: false
-            });
         });
         function convert(str) {
             return String(str).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#x27/g, '\'');

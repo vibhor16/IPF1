@@ -96,7 +96,7 @@
                     <div style="cursor:pointer" onclick="moreOptions()" id="advanced_options">Advanced Options</div>
 
                     <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
-                    @*<button id="main_refresh_button" type="button" onclick="refreshPage()"  class="btn btn-warning" style="margin-left:25%" >New Search &nbsp<i class="fa fa-refresh"></i></button>*@
+                    <button id="main_new_search" type="button" onclick="enableLeftPanel()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
 
                   </div>
 
@@ -744,13 +744,15 @@
             var SystemReadyCallInterval;
             var Utilities_html="";
             $(document).ready(function(){
-                document.getElementById("repoList").disabled=true;
+                attachFocusOutListeners();
+            });
+
+            function attachFocusOutListeners(){
                 $("#searchString").focusout (function () {
+                    debugger;
                     if ($("#searchString").val().length>0) {
-                        document.getElementById("repoList").disabled=false;
                         $("#searchString").attr('style','1px solid #c8d1d3');
-                        }else{
-                        document.getElementById("repoList").disabled=true;
+                    }else{
                         $('#searchString').attr('style','border:2px solid red');
                     }
                 });
@@ -762,8 +764,7 @@
                         $('#repoList').attr('style','border:2px solid red');
                     }
                 });
-
-            });
+            }
 
 
             function init()
@@ -771,8 +772,6 @@
               document.getElementById("stop_search_button").disabled = true;
               document.getElementById("main_search_button").disabled = true;
 
-//              document.getElementById("searchString").disabled 	   = true;
-//              document.getElementById("repoList").disabled 		   = true;
               showLoader("Initialising, please wait...");
               $('#search_duration').html("00:00:00");
               populateReleaseList();
@@ -783,7 +782,10 @@
               //getUtilityFilePkgName();
 
             }
-
+            function enableLeftPanel(){
+                document.getElementById("searchString").disabled = false;
+                document.getElementById("repoList").disabled = false;
+            }
 
 
             function pathterminator(ajax_CLIENT_IP,level_count,key){
@@ -810,18 +812,6 @@
                   }
                 });
             }
-
-            function disableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
-
-              document.getElementById("searchString").disabled 	   = true;
-              document.getElementById("repoList").disabled 		   = true;
-            }
-
-            function enableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
-              document.getElementById("searchString").disabled 	   = false;
-              document.getElementById("repoList").disabled 		   = false;
-            }
-
 
             window.onunload = function (event) {
                 var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
@@ -873,7 +863,6 @@
                   if(data==0)
                   {
                     document.getElementById("main_search_button").disabled = false;
-                    document.getElementById("searchString").disabled 	   = false;
                     removeLoader();
                     clearInterval(SystemReadyCallInterval);
                   }
@@ -1647,7 +1636,7 @@
 //                 	return;
 //                 }
 
-                  debugger;
+
                 if(selRepo=="Please Select.." && searchString.trim().length==0)
                 {
                   content="Missing: Search String & Release";
@@ -1731,6 +1720,8 @@
 
               }
 
+
+
 //              disableLeftPanel(); //Disabled for entire search of this main string
 
               //alert("type: "+type+" level_count: "+level_count+" key: "+key+" func_title: "+func_title);
@@ -1809,9 +1800,6 @@
                 });
 
 
-
-
-
             }
 
             /******** Progress Bar *********/
@@ -1854,8 +1842,6 @@
                   console.log("inside");
                 forceStop=0;
                 document.getElementById("main_search_button").disabled = false;
-//                document.getElementById("searchString").disabled 	   = false;
-//                document.getElementById("repoList").disabled 		   = false;
                 document.getElementById("stop_search_button").disabled = true;
                 clearInterval(call);
                 $('#loader').attr("class", "");
@@ -1891,18 +1877,14 @@
                           success:function(data){
                             var parts=data.split("<!-- vibhor -->");
                             $('#main_card_body').html(parts[1]);
-
-                            // getPastSearches();
+                            attachFocusOutListeners();
                             populateReleaseList();
                             $('#search_duration').html(elapsedTimeValue);
                               }
                         });
-//                        var timer = setTimeout(function() {
-//                          window.location.href=myURL;
-//                        }, 3400);
-                        // window.location.href = myURL;
                       }
-                      enableLeftPanel();
+
+//                      enableLeftPanel();
                     }
                     else
                       $('#main_card_body').html(parts[1]);
@@ -1923,11 +1905,8 @@
               else
               {
                 document.getElementById("main_search_button").disabled = true;
-                document.getElementById("searchString").disabled 	   = true;
-                document.getElementById("repoList").disabled 		   = true;
                 document.getElementById("stop_search_button").disabled = false;
               }
-
             }
 
             /*********** Stop this search ************/
@@ -1936,8 +1915,6 @@
             function stopSearching()
             {
               document.getElementById("main_search_button").disabled = false;
-              document.getElementById("searchString").disabled 	   = false;
-              document.getElementById("repoList").disabled 		   = false;
               document.getElementById("stop_search_button").disabled = true;
               console.log("Stopping this search");
 

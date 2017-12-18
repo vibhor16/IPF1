@@ -94,8 +94,8 @@
 	  
 						<br>
 						<div style="cursor:pointer" onclick="moreOptions()">Advanced Options</div>
-						<button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
-     					<button id="main_new_search" type="button" onclick="enableLeftPanel()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
+						<button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" disabled>Search &nbsp<i class="fa fa-search"></i></button>
+     					<button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
 
 					</div>
 
@@ -354,7 +354,7 @@
             		<div class="card-body no-padding">
 						<div class="row no-gap">
 							<div class="col-xs-12">
-							 <div class="panel-group">
+							 <div class="panel-group" id="result_main_panel">
 							  	<div id="area_main_card">
 							 @if(ALL_SEARCH_STRINGS.size()==0){
 							  

@@ -96,7 +96,7 @@
                     <div style="cursor:pointer" onclick="moreOptions()" id="advanced_options">Advanced Options</div>
 
                     <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
-                    <button id="main_new_search" type="button" onclick="enableLeftPanel()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
+                    <button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
 
                   </div>
 
@@ -359,7 +359,7 @@
                       <div class="card-body no-padding">
                         <div class="row no-gap">
                           <div class="col-xs-12">
-                            <div class="panel-group">
+                            <div class="panel-group" id="result_main_panel">
                               <div id="area_main_card">
                               @if(ALL_SEARCH_STRINGS.size()==0){
 
@@ -782,9 +782,28 @@
               //getUtilityFilePkgName();
 
             }
-            function enableLeftPanel(){
-                document.getElementById("searchString").disabled = false;
-                document.getElementById("repoList").disabled = false;
+            var new_search_btn_msg='New Search &nbsp<i class=\"fa fa-refresh\"';
+            var cont_search_btn_msg='Continue Search &nbsp<i class=\"fa fa-refresh\"';
+            function onNewSearchClick(){
+                var el = document.getElementById("main_new_search");
+                if(el.innerHTML.indexOf("New")>=0){
+                    document.getElementById("searchString").disabled = false;
+                    document.getElementById("repoList").disabled = false;
+                    document.getElementById("main_search_button").disabled = false;
+                    document.getElementById("main_new_search").innerHTML = cont_search_btn_msg;
+                    $("#result_main_panel").css("visibility","hidden");
+
+                }else
+                if(el.innerHTML.indexOf("Continue")>=0){
+                    document.getElementById("searchString").disabled = true;
+                    document.getElementById("repoList").disabled = true;
+                    document.getElementById("main_search_button").disabled = true;
+                    document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
+                    $("#result_main_panel").css("visibility","");
+
+                }
+
+
             }
 
 
@@ -1783,6 +1802,7 @@
                                   getProgress(call, type, level_count, key, func_title)
                                 }, 500);
                                 //console.log("main : percent: "+percent);
+                                  $("#result_main_panel").css("visibility","");
 
 
                               }
@@ -1884,7 +1904,6 @@
                         });
                       }
 
-//                      enableLeftPanel();
                     }
                     else
                       $('#main_card_body').html(parts[1]);

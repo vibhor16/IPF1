@@ -95,8 +95,9 @@
                     <br>
                     <div style="cursor:pointer" onclick="moreOptions()" id="advanced_options">Advanced Options</div>
 
-                    <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
-                    <button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="margin-left:16%" >New Search &nbsp<i class="fa fa-refresh"></i></button>
+                    <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" style="width: 100%;margin-left: 0;">Search <i class="fa fa-search"></i></button>
+                    <button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="width: 100%;margin-left: 0" >New Search <i class="fa fa-refresh"></i></button>
+
 
                   </div>
 
@@ -771,6 +772,7 @@
             {
               document.getElementById("stop_search_button").disabled = true;
               document.getElementById("main_search_button").disabled = true;
+              document.getElementById("main_new_search").disabled = true;
 
               showLoader("Initialising, please wait...");
               $('#search_duration').html("00:00:00");
@@ -782,8 +784,9 @@
               //getUtilityFilePkgName();
 
             }
-            var new_search_btn_msg='New Search &nbsp<i class=\"fa fa-refresh\"';
-            var cont_search_btn_msg='Continue Search &nbsp<i class=\"fa fa-refresh\"';
+            var new_search_btn_msg='New Search <i class="fa fa-refresh"></i>';
+            var cont_search_btn_msg='Continue Search <i class="fa fa-refresh"></i>';
+
             function onNewSearchClick(){
                 var el = document.getElementById("main_new_search");
                 if(el.innerHTML.indexOf("New")>=0){
@@ -792,6 +795,8 @@
                     document.getElementById("main_search_button").disabled = false;
                     document.getElementById("main_new_search").innerHTML = cont_search_btn_msg;
                     $("#result_main_panel").css("visibility","hidden");
+                    document.getElementById("searchString").value="";
+                    $('#repoList>option:eq(0)').prop('selected', true);
 
                 }else
                 if(el.innerHTML.indexOf("Continue")>=0){
@@ -800,7 +805,8 @@
                     document.getElementById("main_search_button").disabled = true;
                     document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
                     $("#result_main_panel").css("visibility","");
-
+                    document.getElementById("searchString").value=searchString;
+                    $('#repoList').val(selRepo);
                 }
 
 
@@ -1661,21 +1667,21 @@
                   content="Missing: Search String & Release";
                   $('#repoList').attr('style','border:2px solid red');
                   $('#searchString').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                 // displayPopUp("Error",content);
                 }
                 else
                 if(selRepo=="Please Select..")
                 {
                   content="Missing: Release";
                   $('#repoList').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                 // displayPopUp("Error",content);
                 }
                 else
                 if(searchString.trim().length==0)
                 {
                   content="Missing: Search String";
                   $('#searchString').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                  //displayPopUp("Error",content);
                 }
                 else
                 {
@@ -1859,9 +1865,9 @@
 
               if(percent>=100 || forceStop==1)
               {
-                  console.log("inside");
+                console.log("inside");
                 forceStop=0;
-                document.getElementById("main_search_button").disabled = false;
+//                document.getElementById("main_search_button").disabled = false;
                 document.getElementById("stop_search_button").disabled = true;
                 clearInterval(call);
                 $('#loader').attr("class", "");
@@ -1882,8 +1888,13 @@
                      // displayPopUp("Notice","<h3>No further mention for this string</h3>");
                       var notFoundMessage='<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top: 5%;background-color: rgba(249, 28, 8, 0.81);color: white;">No Results Found For This String!</div>';
                       $('#area_main_card').html(notFoundMessage);
-                      if(type1=='left')
-                        $('#area_result_card').html('');
+                      if(type1=='left') //First main search moment
+                      {
+                          $('#area_result_card').html('');
+                          document.getElementById("main_new_search").disabled = true;
+                          document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
+
+                      }
                       var level="@level_count";
                       console.log("type: "+type1+" level_count: "+level_count1+" key: "+key1+"  func_title: "+func_title1);
 
@@ -1906,7 +1917,12 @@
 
                     }
                     else
-                      $('#main_card_body').html(parts[1]);
+                    {
+                        $('#main_card_body').html(parts[1]);
+                        document.getElementById("main_new_search").disabled = false;
+                        document.getElementById("main_search_button").disabled = true;
+
+                    }
 
                     // getPastSearches();
                     populateReleaseList();
@@ -1923,7 +1939,7 @@
               }
               else
               {
-                document.getElementById("main_search_button").disabled = true;
+//                document.getElementById("main_search_button").disabled = true;
                 document.getElementById("stop_search_button").disabled = false;
               }
             }

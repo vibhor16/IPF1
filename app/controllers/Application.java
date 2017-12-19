@@ -97,10 +97,11 @@ public class Application extends Controller {
 
 
 
-    
 
 
-    
+
+
+
     public static Result AjaxCalls(String callRequestURI){
 
 
@@ -110,7 +111,6 @@ public class Application extends Controller {
         Client clientObject;
         ClientResult clientResultObject;
 
-   
         if(callRequestURI.contains("terminateClient")){
             System.out.println("terminate client");
             handleClientTerminateRequest(ajax_CLIENT_IP);
@@ -192,6 +192,7 @@ public class Application extends Controller {
                 int numFilesInThisRepo = clientObject.allRepoFileCount.get(thisRepoPath);
                 // System.out.println("[PROGRESS] Traversed: "+clientObject.GLOBAL_FILE_COUNT+"  total: "+numFilesInThisRepo);
                 double percent = (double) clientObject.GLOBAL_FILE_COUNT * 100 / numFilesInThisRepo;
+
                 return ok(Json.toJson(percent));
 
         }else

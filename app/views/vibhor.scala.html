@@ -1779,51 +1779,53 @@
 
                           if(data.length<100) {
                             displayPopUp("Notice", data);
+                            forceStop=1;
                             return;
                           }
-                            myURL = "/ajax/" + CLIENT_IP + "/progress";
-                            $.ajax({
-
-                              url: myURL,
-                              async: true,
-                              success: function (data) {
-
-                                var loader_icon = '<div class="loader-container text-center">' +
-                                        '<div class="icon">' +
-                                        '<div class="sk-wave">' +
-                                        '<div class="sk-rect sk-rect1">' + '</div>' +
-                                        '<div class="sk-rect sk-rect2">' + '</div>' +
-                                        '<div class="sk-rect sk-rect3">' + '</div>' +
-                                        '<div class="sk-rect sk-rect4">' + '</div>' +
-                                        '<div class="sk-rect sk-rect5">' + '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="title" id="loader_title"></div>' +
-                                        '</div>';
-                                $('#loader').attr("class", "card-body __loading");
-                                $('#loader_icon').html(loader_icon);
-                                $('#loader_icon1').html(loader_icon);
-                                // $('#loader_title').html(progressString);
-                                var call = setInterval(function () {
-                                  getProgress(call, type, level_count, key, func_title)
-                                }, 500);
-                                //console.log("main : percent: "+percent);
-                                  $("#result_main_panel").css("visibility","");
-
-
-                              }
-                            });
-
-
-                            //for elapsed time
-                            callElapsed = setInterval(function () {
-                              getElapsedSearchTime()
-                            }, 500);
-
 
 
                   }
                 });
+
+              myURL = "/ajax/" + CLIENT_IP + "/progress";
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success: function (data) {
+
+                  var loader_icon = '<div class="loader-container text-center">' +
+                          '<div class="icon">' +
+                          '<div class="sk-wave">' +
+                          '<div class="sk-rect sk-rect1">' + '</div>' +
+                          '<div class="sk-rect sk-rect2">' + '</div>' +
+                          '<div class="sk-rect sk-rect3">' + '</div>' +
+                          '<div class="sk-rect sk-rect4">' + '</div>' +
+                          '<div class="sk-rect sk-rect5">' + '</div>' +
+                          '</div>' +
+                          '</div>' +
+                          '<div class="title" id="loader_title"></div>' +
+                          '</div>';
+                  $('#loader').attr("class", "card-body __loading");
+                  $('#loader_icon').html(loader_icon);
+                  $('#loader_icon1').html(loader_icon);
+                  // $('#loader_title').html(progressString);
+                  var call = setInterval(function () {
+                    getProgress(call, type, level_count, key, func_title)
+                  }, 500);
+                  //console.log("main : percent: "+percent);
+                  $("#result_main_panel").css("visibility","");
+
+
+                }
+              });
+
+
+              //for elapsed time
+              callElapsed = setInterval(function () {
+                getElapsedSearchTime()
+              }, 500);
+
 
 
             }
@@ -1843,22 +1845,21 @@
                 success:function(data){
                   //alert(data);
                   console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
-                  if(data==="-1" || zeroProgressCounter==10){
+                  if(data==="-1" || data=="alreadySearched"){
                       forceStop=1;
                       console.log("force stop: "+forceStop+"  zeroProgressCounter: "+zeroProgressCounter);
                       zeroProgressCounter=0;
                       return;
                   }
 
-                  percent=Number(data);
-                  if(parseInt(percent)==0)
-                    zeroProgressCounter++;
+                  if(forceStop==0) {
+                    percent = Number(data);
+                    $('#progress_bar').css('width', percent + '%');
 
-                  $('#progress_bar').css('width', percent+'%');
-
-                  var progressString="Searching <b>"+searchString+"</b> in <b>'"+selRepo+"'</b> ("+percent.toFixed(2)+"%)";
-                  $('#loader_title').html(progressString);
-                  //console.log("percent2: "+percent);
+                    var progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
+                    $('#loader_title').html(progressString);
+                    //console.log("percent2: "+percent);
+                  }
 
                 }
               });
@@ -1872,6 +1873,8 @@
                 clearInterval(call);
                 $('#loader').attr("class", "");
                 $('#loader_icon').html("");
+                $('#progress_bar').css('width', '100%');
+
 
                 //window.location="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;
                 $.ajax({

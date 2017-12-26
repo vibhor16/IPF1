@@ -750,7 +750,6 @@
 
             function attachFocusOutListeners(){
                 $("#searchString").focusout (function () {
-                    debugger;
                     if ($("#searchString").val().length>0) {
                         $("#searchString").attr('style','1px solid #c8d1d3');
                     }else{
@@ -1598,7 +1597,7 @@
               level_count1=level_count;
               key1=key;
               func_title1=func_title;
-
+              alreadySearchedFlag=0;
               $('#repoList').attr('style','border: 1px solid #c8d1d3');
               $('#searchString').attr('style','border: 1px solid #c8d1d3');
 
@@ -1607,7 +1606,6 @@
 
 
               var content;
-              var alreadySearchedFlag=false;
               $('#search_duration').html("00:00:00");
               $('#current_path_area').html("");
               var myURL,flag=0;
@@ -1687,21 +1685,10 @@
                 {
                     $("#searchString").attr('style','1px solid #c8d1d3');
                     $("#repolist").attr('style','1px solid #c8d1d3');
-                    var myURL="/ajax/"+CLIENT_IP+"/setSearchString/"+searchString;
-
-                    $.ajax({
-
-                      url: myURL,
-                      async: true,
-                      success:function(data){
-                        console.log(data);
-
-                      }
-                    });
-                  myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
-                  flag=1;
+                    myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
+                    flag=1;
                 }
-              }// if type left
+              }// end if type left
               else
               {
 
@@ -1779,51 +1766,53 @@
 
                           if(data.length<100) {
                             displayPopUp("Notice", data);
+                            forceStop=1;
                             return;
                           }
-                            myURL = "/ajax/" + CLIENT_IP + "/progress";
-                            $.ajax({
-
-                              url: myURL,
-                              async: true,
-                              success: function (data) {
-
-                                var loader_icon = '<div class="loader-container text-center">' +
-                                        '<div class="icon">' +
-                                        '<div class="sk-wave">' +
-                                        '<div class="sk-rect sk-rect1">' + '</div>' +
-                                        '<div class="sk-rect sk-rect2">' + '</div>' +
-                                        '<div class="sk-rect sk-rect3">' + '</div>' +
-                                        '<div class="sk-rect sk-rect4">' + '</div>' +
-                                        '<div class="sk-rect sk-rect5">' + '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="title" id="loader_title"></div>' +
-                                        '</div>';
-                                $('#loader').attr("class", "card-body __loading");
-                                $('#loader_icon').html(loader_icon);
-                                $('#loader_icon1').html(loader_icon);
-                                // $('#loader_title').html(progressString);
-                                var call = setInterval(function () {
-                                  getProgress(call, type, level_count, key, func_title)
-                                }, 500);
-                                //console.log("main : percent: "+percent);
-                                  $("#result_main_panel").css("visibility","");
-
-
-                              }
-                            });
-
-
-                            //for elapsed time
-                            callElapsed = setInterval(function () {
-                              getElapsedSearchTime()
-                            }, 500);
-
 
 
                   }
                 });
+
+              myURL = "/ajax/" + CLIENT_IP + "/progress";
+              $.ajax({
+
+                url: myURL,
+                async: true,
+                success: function (data) {
+
+                  var loader_icon = '<div class="loader-container text-center">' +
+                          '<div class="icon">' +
+                          '<div class="sk-wave">' +
+                          '<div class="sk-rect sk-rect1">' + '</div>' +
+                          '<div class="sk-rect sk-rect2">' + '</div>' +
+                          '<div class="sk-rect sk-rect3">' + '</div>' +
+                          '<div class="sk-rect sk-rect4">' + '</div>' +
+                          '<div class="sk-rect sk-rect5">' + '</div>' +
+                          '</div>' +
+                          '</div>' +
+                          '<div class="title" id="loader_title"></div>' +
+                          '</div>';
+                  $('#loader').attr("class", "card-body __loading");
+                  $('#loader_icon').html(loader_icon);
+                  $('#loader_icon1').html(loader_icon);
+                  // $('#loader_title').html(progressString);
+                  var call = setInterval(function () {
+                    getProgress(call, type, level_count, key, func_title)
+                  }, 500);
+                  //console.log("main : percent: "+percent);
+                  $("#result_main_panel").css("visibility","");
+
+
+                }
+              });
+
+
+              //for elapsed time
+              callElapsed = setInterval(function () {
+                getElapsedSearchTime()
+              }, 500);
+
 
 
             }
@@ -1831,7 +1820,7 @@
             /******** Progress Bar *********/
 
 
-            var zeroProgressCounter=0;                 //If consecutive 10 times 0 progress, then force stop.
+            var zeroProgressCounter=0,alreadySearchedFlag=0;                 //If consecutive 10 times 0 progress, then force stop.
             function getProgress(call,type,level_count,key,func_title)
             {
               var myURL="/ajax/"+CLIENT_IP+"/progress";
@@ -1843,28 +1832,34 @@
                 success:function(data){
                   //alert(data);
                   console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
-                  if(data==="-1" || zeroProgressCounter==10){
+                  if(data==="-1" || data=="alreadySearched"){
+
+                      debugger;
                       forceStop=1;
+                      alreadySearchedFlag=1;
                       console.log("force stop: "+forceStop+"  zeroProgressCounter: "+zeroProgressCounter);
                       zeroProgressCounter=0;
                       return;
                   }
 
-                  percent=Number(data);
-                  if(parseInt(percent)==0)
-                    zeroProgressCounter++;
+                    percent = Number(data);
+                    $('#progress_bar').css('width', percent + '%');
 
-                  $('#progress_bar').css('width', percent+'%');
+                    if(alreadySearchedFlag==1){
+                      $('#progress_bar').css('width', '100%');
+                    }
+                    var progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
+                    $('#loader_title').html(progressString);
+                    //console.log("percent2: "+percent);
 
-                  var progressString="Searching <b>"+searchString+"</b> in <b>'"+selRepo+"'</b> ("+percent.toFixed(2)+"%)";
-                  $('#loader_title').html(progressString);
-                  //console.log("percent2: "+percent);
 
                 }
               });
 
+
               if(percent>=100 || forceStop==1)
               {
+                  debugger;
                 console.log("inside");
                 forceStop=0;
 //                document.getElementById("main_search_button").disabled = false;
@@ -1872,6 +1867,8 @@
                 clearInterval(call);
                 $('#loader').attr("class", "");
                 $('#loader_icon').html("");
+                $('#progress_bar').css('width', '100%');
+
 
                 //window.location="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;
                 $.ajax({

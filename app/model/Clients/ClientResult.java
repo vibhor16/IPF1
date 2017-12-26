@@ -30,6 +30,5 @@ public class ClientResult {
         ALL_SEARCH_STRINGS=new ArrayList<>();
         ALL_REFINED_HM=new ArrayList<>();
         ALL_TYPE_COUNTS=new ArrayList<>();
-
     }
 }

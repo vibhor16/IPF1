@@ -1,0 +1,104 @@
+@(SEARCH_STRING: String,ajax_CLIENT_IP : String)
+@import scala.Predef; var count = 0; var nodewithstar="";
+<html>
+<head>
+ <title>Impact Path Flow 1.0</title>
+  <link rel="icon" href="@routes.Assets.at("images/tab_icon.png")">
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/vendor.css")">
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/flat-admin.css")">
+   <!-- Theme -->
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue-sky.css")">
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
+
+ 
+</head>
+<body style="width:100%; height:100%;background-color: rgba(2, 56, 103, 0.25)">
+ <script src="@routes.Assets.at("javascripts/jquery3.min.js")"></script>
+ <script src="@routes.Assets.at("javascripts/graphSpringy/springy.js")"></script>
+ <script src="@routes.Assets.at("javascripts/graphSpringy/springyui.js")"></script>
+
+
+<script type="text/javascript">
+
+var ajax_client_ip="@ajax_CLIENT_IP";
+var graph = new Springy.Graph();
+
+$(document).ready(function () {
+
+
+    $.ajax({
+
+		url: '/ajax/'+ajax_client_ip+'/getGraph',
+		async: true,
+		success:function(data){
+			createMap(data);
+		}
+	});
+});
+
+function createMap(map){
+    debugger;
+var SEARCH_STRING='@SEARCH_STRING';
+
+ var map1={};
+ var id=0,node,parent;
+ var keys=Object.keys(map);
+ for(value in keys){
+
+     var parent = keys[value];
+	if(parent == SEARCH_STRING){
+	   nodewithstar="("+parent.trim()+")*";
+	   node = graph.newNode({label: nodewithstar.trim()});
+	   map1[nodewithstar] = id;
+	}else{
+		node = graph.newNode({label: "("+parent.trim()+")"});
+		map1["("+parent.trim()+")"] = id;
+		}
+		id=id+1;
+ }
+
+
+	for(value in keys){
+        var parent = keys[value];
+		var children=map[parent];
+//		var children1=children0.replace("["," ");
+//		var childrenProper=children1.replace("]"," ")
+
+		if(children != null) {
+			for (i = 0; i < children.length; i++) {
+				if (children[i] != "") {
+					var childActual = "(" + children[i].trim() + ")";
+					var parentActual = "(" + parent + ")";
+					if( parent == SEARCH_STRING )
+					    parentActual = "(" + parent + ")*";
+					graph.newEdge(graph.returnNode(map1[parentActual]), graph.returnNode(map1[childActual]), {color: '#008000'});
+				}
+
+			}
+		}
+
+
+	}
+}
+
+jQuery(function(){
+	var springy = window.springy = jQuery('#springydemo').springy({
+		graph: graph,
+		nodeSelected: function(node){
+			console.log('Node selected: ' + JSON.stringify(node.data));
+		}
+	});
+});
+
+</script>
+<div style="text-align:center;color:black;"><b>Search String:&nbsp&nbsp</b> @SEARCH_STRING<br>(&nbsp* denotes the search string &nbsp)</div>
+<div style="text-align: center;">
+	<div class="col-md-12">
+		<canvas id="springydemo" width="1400" height="600" style="border: 1px solid rgba(158, 158, 158, 0.17);margin-top:30px;background-color: white;">
+		</canvas>
+	</div>
+</div>
+</body>
+</html>

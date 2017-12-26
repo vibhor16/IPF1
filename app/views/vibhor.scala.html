@@ -60,7 +60,12 @@
                   <label class="col-md-4 control-label" style="color: black;">String</label>
                   <div class="col-md-12">
 
-                    <input id="searchString" type="text" class="form-control" placeholder="Type in a string" name="searchString">
+                    @if(CURRENT_PATH.size() > 0){
+                      <input id="searchString" type="text" class="form-control" placeholder="@CURRENT_PATH.get(0)" name="searchString">
+                    }else{
+                      <input id="searchString" type="text" class="form-control" placeholder="" name="searchString">
+                    }
+
                     <label style="color: black;" >Release</label>
                     <select id="repoList" class="form-control"  name="repoList">
                         <!-- <option selected="selected" value=""> </option>

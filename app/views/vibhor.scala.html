@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
     <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
-      <script src="@routes.Assets.at("javascripts/jquery3.min.js")"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
   </head>
@@ -748,7 +748,7 @@
                 attachFocusOutListeners();
             });
 
-            function attachFocusOutListeners(){
+           function attachFocusOutListeners(){
                 $("#searchString").focusout (function () {
                     if ($("#searchString").val().length>0) {
                         $("#searchString").attr('style','1px solid #c8d1d3');
@@ -776,11 +776,7 @@
               showLoader("Initialising, please wait...");
               $('#search_duration').html("00:00:00");
               populateReleaseList();
-              //getPastSearches();
-              // 	UtilityCallInterval=setInterval(function(){ getUtilityFilePkgName(UtilityCallInterval)  }, 1000);
               SystemReadyCallInterval=setInterval(function(){ getSystemReadyStatus(SystemReadyCallInterval)  }, 500);
-
-              //getUtilityFilePkgName();
 
             }
             var new_search_btn_msg='New Search <i class="fa fa-refresh"></i>';

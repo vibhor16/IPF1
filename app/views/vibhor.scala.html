@@ -95,8 +95,9 @@
                     <br>
                     <div style="cursor:pointer" onclick="moreOptions()" id="advanced_options">Advanced Options</div>
 
-                    <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" >Search &nbsp<i class="fa fa-search"></i></button>
-                    @*<button id="main_refresh_button" type="button" onclick="refreshPage()"  class="btn btn-warning" style="margin-left:25%" >New Search &nbsp<i class="fa fa-refresh"></i></button>*@
+                    <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" style="width: 100%;margin-left: 0;">Search <i class="fa fa-search"></i></button>
+                    <button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="width: 100%;margin-left: 0" >New Search <i class="fa fa-refresh"></i></button>
+
 
                   </div>
 
@@ -359,7 +360,7 @@
                       <div class="card-body no-padding">
                         <div class="row no-gap">
                           <div class="col-xs-12">
-                            <div class="panel-group">
+                            <div class="panel-group" id="result_main_panel">
                               <div id="area_main_card">
                               @if(ALL_SEARCH_STRINGS.size()==0){
 
@@ -480,18 +481,18 @@
                                                             @if(colorSelectedFunctions.contains((level_count-1)+"-"+key+"-"+func_title)){
 
 
-                                                              <div class="panel-body selected" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                              <div class="panel-body selected" id="@key-@func_title">
                                                                 <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                               </div>
                                                             }else{
 
 
-                                                              <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                              <div class="panel-body" id="@key-@func_title">
                                                                 <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                               </div>
                                                             }
                                                           }else{
-                                                            <div class="panel-body" id="@key-@func_title" onclick="GetTextboxCordinates(id)">
+                                                            <div class="panel-body" id="@key-@func_title">
                                                               <a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
                                                             </div>
                                                           }
@@ -744,13 +745,14 @@
             var SystemReadyCallInterval;
             var Utilities_html="";
             $(document).ready(function(){
-                document.getElementById("repoList").disabled=true;
+                attachFocusOutListeners();
+            });
+
+           function attachFocusOutListeners(){
                 $("#searchString").focusout (function () {
                     if ($("#searchString").val().length>0) {
-                        document.getElementById("repoList").disabled=false;
                         $("#searchString").attr('style','1px solid #c8d1d3');
-                        }else{
-                        document.getElementById("repoList").disabled=true;
+                    }else{
                         $('#searchString').attr('style','border:2px solid red');
                     }
                 });
@@ -762,28 +764,48 @@
                         $('#repoList').attr('style','border:2px solid red');
                     }
                 });
-
-            });
+            }
 
 
             function init()
             {
               document.getElementById("stop_search_button").disabled = true;
               document.getElementById("main_search_button").disabled = true;
+              document.getElementById("main_new_search").disabled = true;
 
-//              document.getElementById("searchString").disabled 	   = true;
-//              document.getElementById("repoList").disabled 		   = true;
               showLoader("Initialising, please wait...");
               $('#search_duration').html("00:00:00");
               populateReleaseList();
-              //getPastSearches();
-              // 	UtilityCallInterval=setInterval(function(){ getUtilityFilePkgName(UtilityCallInterval)  }, 1000);
               SystemReadyCallInterval=setInterval(function(){ getSystemReadyStatus(SystemReadyCallInterval)  }, 500);
 
-              //getUtilityFilePkgName();
+            }
+            var new_search_btn_msg='New Search <i class="fa fa-refresh"></i>';
+            var cont_search_btn_msg='Continue Search <i class="fa fa-refresh"></i>';
+
+            function onNewSearchClick(){
+                var el = document.getElementById("main_new_search");
+                if(el.innerHTML.indexOf("New")>=0){
+                    document.getElementById("searchString").disabled = false;
+                    document.getElementById("repoList").disabled = false;
+                    document.getElementById("main_search_button").disabled = false;
+                    document.getElementById("main_new_search").innerHTML = cont_search_btn_msg;
+                    $("#result_main_panel").css("visibility","hidden");
+                    document.getElementById("searchString").value="";
+                    $('#repoList>option:eq(0)').prop('selected', true);
+
+                }else
+                if(el.innerHTML.indexOf("Continue")>=0){
+                    document.getElementById("searchString").disabled = true;
+                    document.getElementById("repoList").disabled = true;
+                    document.getElementById("main_search_button").disabled = true;
+                    document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
+                    $("#result_main_panel").css("visibility","");
+                    document.getElementById("searchString").value=searchString;
+                    $('#repoList').val(selRepo);
+                }
+
 
             }
-
 
 
             function pathterminator(ajax_CLIENT_IP,level_count,key){
@@ -810,19 +832,6 @@
                   }
                 });
             }
-
-            function disableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
-
-              document.getElementById("searchString").disabled 	   = true;
-              document.getElementById("repoList").disabled 		   = true;
-            }
-
-            function enableLeftPanel(){ // Disabled if at least 1 level of search is there so that user accidentally does not change the repo of main search string
-              document.getElementById("searchString").disabled 	   = false;
-              document.getElementById("repoList").disabled 		   = false;
-              document.getElementById("main_search_button").disabled= false;
-            }
-
 
             window.onunload = function (event) {
                 var myURL='/ajax/'+CLIENT_IP+'/terminateClient';
@@ -874,7 +883,6 @@
                   if(data==0)
                   {
                     document.getElementById("main_search_button").disabled = false;
-                    document.getElementById("searchString").disabled 	   = false;
                     removeLoader();
                     clearInterval(SystemReadyCallInterval);
                   }
@@ -1585,7 +1593,7 @@
               level_count1=level_count;
               key1=key;
               func_title1=func_title;
-
+              alreadySearchedFlag=0;
               $('#repoList').attr('style','border: 1px solid #c8d1d3');
               $('#searchString').attr('style','border: 1px solid #c8d1d3');
 
@@ -1594,7 +1602,6 @@
 
 
               var content;
-              var alreadySearchedFlag=false;
               $('#search_duration').html("00:00:00");
               $('#current_path_area').html("");
               var myURL,flag=0;
@@ -1648,47 +1655,36 @@
 //                 	return;
 //                 }
 
-                  debugger;
+
                 if(selRepo=="Please Select.." && searchString.trim().length==0)
                 {
                   content="Missing: Search String & Release";
                   $('#repoList').attr('style','border:2px solid red');
                   $('#searchString').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                 // displayPopUp("Error",content);
                 }
                 else
                 if(selRepo=="Please Select..")
                 {
                   content="Missing: Release";
                   $('#repoList').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                 // displayPopUp("Error",content);
                 }
                 else
                 if(searchString.trim().length==0)
                 {
                   content="Missing: Search String";
                   $('#searchString').attr('style','border:2px solid red');
-                  displayPopUp("Error",content);
+                  //displayPopUp("Error",content);
                 }
                 else
                 {
                     $("#searchString").attr('style','1px solid #c8d1d3');
                     $("#repolist").attr('style','1px solid #c8d1d3');
-                    var myURL="/ajax/"+CLIENT_IP+"/setSearchString/"+searchString;
-
-                    $.ajax({
-
-                      url: myURL,
-                      async: true,
-                      success:function(data){
-                        console.log(data);
-
-                      }
-                    });
-                  myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
-                  flag=1;
+                    myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
+                    flag=1;
                 }
-              }// if type left
+              }// end if type left
               else
               {
 
@@ -1732,6 +1728,8 @@
 
               }
 
+
+
 //              disableLeftPanel(); //Disabled for entire search of this main string
 
               //alert("type: "+type+" level_count: "+level_count+" key: "+key+" func_title: "+func_title);
@@ -1764,52 +1762,52 @@
 
                           if(data.length<100) {
                             displayPopUp("Notice", data);
+                            forceStop=1;
                             return;
                           }
-                            myURL = "/ajax/" + CLIENT_IP + "/progress";
-                            $.ajax({
-
-                              url: myURL,
-                              async: true,
-                              success: function (data) {
-
-                                var loader_icon = '<div class="loader-container text-center">' +
-                                        '<div class="icon">' +
-                                        '<div class="sk-wave">' +
-                                        '<div class="sk-rect sk-rect1">' + '</div>' +
-                                        '<div class="sk-rect sk-rect2">' + '</div>' +
-                                        '<div class="sk-rect sk-rect3">' + '</div>' +
-                                        '<div class="sk-rect sk-rect4">' + '</div>' +
-                                        '<div class="sk-rect sk-rect5">' + '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="title" id="loader_title"></div>' +
-                                        '</div>';
-                                $('#loader').attr("class", "card-body __loading");
-                                $('#loader_icon').html(loader_icon);
-                                $('#loader_icon1').html(loader_icon);
-                                // $('#loader_title').html(progressString);
-                                var call = setInterval(function () {
-                                  getProgress(call, type, level_count, key, func_title)
-                                }, 500);
-                                //console.log("main : percent: "+percent);
-
-
-                              }
-                            });
-
-
-                            //for elapsed time
-                            callElapsed = setInterval(function () {
-                              getElapsedSearchTime()
-                            }, 500);
-
 
 
                   }
                 });
 
+              myURL = "/ajax/" + CLIENT_IP + "/progress";
+              $.ajax({
 
+                url: myURL,
+                async: true,
+                success: function (data) {
+
+                  var loader_icon = '<div class="loader-container text-center">' +
+                          '<div class="icon">' +
+                          '<div class="sk-wave">' +
+                          '<div class="sk-rect sk-rect1">' + '</div>' +
+                          '<div class="sk-rect sk-rect2">' + '</div>' +
+                          '<div class="sk-rect sk-rect3">' + '</div>' +
+                          '<div class="sk-rect sk-rect4">' + '</div>' +
+                          '<div class="sk-rect sk-rect5">' + '</div>' +
+                          '</div>' +
+                          '</div>' +
+                          '<div class="title" id="loader_title"></div>' +
+                          '</div>';
+                  $('#loader').attr("class", "card-body __loading");
+                  $('#loader_icon').html(loader_icon);
+                  $('#loader_icon1').html(loader_icon);
+                  // $('#loader_title').html(progressString);
+                  var call = setInterval(function () {
+                    getProgress(call, type, level_count, key, func_title)
+                  }, 500);
+                  //console.log("main : percent: "+percent);
+                  $("#result_main_panel").css("visibility","");
+
+
+                }
+              });
+
+
+              //for elapsed time
+              callElapsed = setInterval(function () {
+                getElapsedSearchTime()
+              }, 500);
 
 
 
@@ -1818,7 +1816,7 @@
             /******** Progress Bar *********/
 
 
-            var zeroProgressCounter=0;                 //If consecutive 10 times 0 progress, then force stop.
+            var zeroProgressCounter=0,alreadySearchedFlag=0;                 //If consecutive 10 times 0 progress, then force stop.
             function getProgress(call,type,level_count,key,func_title)
             {
               var myURL="/ajax/"+CLIENT_IP+"/progress";
@@ -1830,37 +1828,43 @@
                 success:function(data){
                   //alert(data);
                   console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
-                  if(data==="-1" || zeroProgressCounter==10){
+                  if(data==="-1" || data=="alreadySearched"){
+
+                      debugger;
                       forceStop=1;
+                      alreadySearchedFlag=1;
                       console.log("force stop: "+forceStop+"  zeroProgressCounter: "+zeroProgressCounter);
                       zeroProgressCounter=0;
                       return;
                   }
 
-                  percent=Number(data);
-                  if(parseInt(percent)==0)
-                    zeroProgressCounter++;
+                    percent = Number(data);
+                    $('#progress_bar').css('width', percent + '%');
 
-                  $('#progress_bar').css('width', percent+'%');
+                    if(alreadySearchedFlag==1){
+                      $('#progress_bar').css('width', '100%');
+                    }
+                    var progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
+                    $('#loader_title').html(progressString);
+                    //console.log("percent2: "+percent);
 
-                  var progressString="Searching <b>"+searchString+"</b> in <b>'"+selRepo+"'</b> ("+percent.toFixed(2)+"%)";
-                  $('#loader_title').html(progressString);
-                  //console.log("percent2: "+percent);
 
                 }
               });
 
+
               if(percent>=100 || forceStop==1)
               {
-                  console.log("inside");
+                  debugger;
+                console.log("inside");
                 forceStop=0;
-                document.getElementById("main_search_button").disabled = false;
-//                document.getElementById("searchString").disabled 	   = false;
-//                document.getElementById("repoList").disabled 		   = false;
+//                document.getElementById("main_search_button").disabled = false;
                 document.getElementById("stop_search_button").disabled = true;
                 clearInterval(call);
                 $('#loader').attr("class", "");
                 $('#loader_icon').html("");
+                $('#progress_bar').css('width', '100%');
+
 
                 //window.location="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;
                 $.ajax({
@@ -1877,8 +1881,13 @@
                      // displayPopUp("Notice","<h3>No further mention for this string</h3>");
                       var notFoundMessage='<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top: 5%;background-color: rgba(249, 28, 8, 0.81);color: white;">No Results Found For This String!</div>';
                       $('#area_main_card').html(notFoundMessage);
-                      if(type1=='left')
-                        $('#area_result_card').html('');
+                      if(type1=='left') //First main search moment
+                      {
+                          $('#area_result_card').html('');
+                          document.getElementById("main_new_search").disabled = true;
+                          document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
+
+                      }
                       var level="@level_count";
                       console.log("type: "+type1+" level_count: "+level_count1+" key: "+key1+"  func_title: "+func_title1);
 
@@ -1892,21 +1901,21 @@
                           success:function(data){
                             var parts=data.split("<!-- vibhor -->");
                             $('#main_card_body').html(parts[1]);
-
-                            // getPastSearches();
+                            attachFocusOutListeners();
                             populateReleaseList();
                             $('#search_duration').html(elapsedTimeValue);
                               }
                         });
-//                        var timer = setTimeout(function() {
-//                          window.location.href=myURL;
-//                        }, 3400);
-                        // window.location.href = myURL;
                       }
-                      enableLeftPanel();
+
                     }
                     else
-                      $('#main_card_body').html(parts[1]);
+                    {
+                        $('#main_card_body').html(parts[1]);
+                        document.getElementById("main_new_search").disabled = false;
+                        document.getElementById("main_search_button").disabled = true;
+
+                    }
 
                     // getPastSearches();
                     populateReleaseList();
@@ -1923,12 +1932,9 @@
               }
               else
               {
-                document.getElementById("main_search_button").disabled = true;
-                document.getElementById("searchString").disabled 	   = true;
-                document.getElementById("repoList").disabled 		   = true;
+//                document.getElementById("main_search_button").disabled = true;
                 document.getElementById("stop_search_button").disabled = false;
               }
-
             }
 
             /*********** Stop this search ************/
@@ -1937,8 +1943,6 @@
             function stopSearching()
             {
               document.getElementById("main_search_button").disabled = false;
-              document.getElementById("searchString").disabled 	   = false;
-              document.getElementById("repoList").disabled 		   = false;
               document.getElementById("stop_search_button").disabled = true;
               console.log("Stopping this search");
 

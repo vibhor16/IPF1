@@ -97,10 +97,11 @@ public class Application extends Controller {
 
 
 
-    
 
 
-    
+
+
+
     public static Result AjaxCalls(String callRequestURI){
 
 
@@ -110,7 +111,6 @@ public class Application extends Controller {
         Client clientObject;
         ClientResult clientResultObject;
 
-   
         if(callRequestURI.contains("terminateClient")){
             System.out.println("terminate client");
             handleClientTerminateRequest(ajax_CLIENT_IP);
@@ -123,7 +123,6 @@ public class Application extends Controller {
      
         if(callRequestURI.contains("indexLoaded")){
 
-            // System.out.println("call request: "+ajax_CLIENT_IP+"  indexLoaded");
             return ok(Json.toJson(initFrontPageLoaded(ajax_CLIENT_IP)+""));
 
         }else
@@ -134,18 +133,11 @@ public class Application extends Controller {
 
         }else
           if(callRequestURI.contains("mainSearch")){          //type: /ajax/:client_ip/mainSearch/1/a/a
-            if(getClientObject(ajax_CLIENT_IP)==null){
-                System.out.println("Null mileya si");
-            }
-            // handleIncomingRequest();
-            
-            // clientObject=getClientObject(ajax_CLIENT_IP);
-            // clientResultObject=getClientResultObject();
-            // clientObject.setClientInstancesRunning(-1);        //Client running instances increased by handleIncomingRequest() reduced by one so that it is accurate
-            
+
             String visitNum=temp_requestURI_array[2];
             String SEARCH_STRING=temp_requestURI_array[3];
             String selectedRepository=temp_requestURI_array[4];
+            clientObject.setSearchString(SEARCH_STRING);
             clientObject.mainSearch(visitNum,SEARCH_STRING,selectedRepository,clientResultObject);
             return ok(vibhor.render(
                     clientResultObject.FILE_DIRECTORY_PATH,
@@ -170,12 +162,6 @@ public class Application extends Controller {
             return ok(Json.toJson(result));
 
         }else
-        if(callRequestURI.contains("setSearchString")){
-
-            clientObject.setSearchString(temp_requestURI_array[2]);
-            return ok(Json.toJson("Search String: "+temp_requestURI_array[2]+" is set!"));
-
-        }else
         if(callRequestURI.contains("isStringAlreadySearched")){
 
             return ok(Json.toJson(clientObject.isStringAlreadySearched(temp_requestURI_array[2])));
@@ -192,6 +178,7 @@ public class Application extends Controller {
                 int numFilesInThisRepo = clientObject.allRepoFileCount.get(thisRepoPath);
                 // System.out.println("[PROGRESS] Traversed: "+clientObject.GLOBAL_FILE_COUNT+"  total: "+numFilesInThisRepo);
                 double percent = (double) clientObject.GLOBAL_FILE_COUNT * 100 / numFilesInThisRepo;
+
                 return ok(Json.toJson(percent));
 
         }else
@@ -252,7 +239,12 @@ public class Application extends Controller {
         }else
         if(callRequestURI.contains("graph")){
 
-            return ok(demo.render(clientObject.SEARCH_STRING,clientObject.getMap()));
+            return ok(graph.render(clientObject.ALL_SEARCH_STRINGS.get(0),ajax_CLIENT_IP));
+
+        }else
+        if(callRequestURI.contains("getGraph")){
+
+            return ok(Json.toJson(clientObject.getMap()));
 
         }else
         if(callRequestURI.contains("newsearch")){

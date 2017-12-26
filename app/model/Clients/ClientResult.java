@@ -18,7 +18,6 @@ public class ClientResult {
     public ArrayList<String> ALL_SEARCH_STRINGS;
     public ArrayList<LinkedHashMap<String,ArrayList<String>>> ALL_REFINED_HM;
     public ArrayList<LinkedHashMap<String,String>> ALL_TYPE_COUNTS;
-    public LinkedHashMap<String,ArrayList<String>> resultMap;
 
     ClientResult(){
         FILE_DIRECTORY_PATH=new LinkedHashMap<>();
@@ -31,7 +30,5 @@ public class ClientResult {
         ALL_SEARCH_STRINGS=new ArrayList<>();
         ALL_REFINED_HM=new ArrayList<>();
         ALL_TYPE_COUNTS=new ArrayList<>();
-        resultMap=new LinkedHashMap<>();
-
     }
 }

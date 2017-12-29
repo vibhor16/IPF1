@@ -1683,6 +1683,9 @@
                 {
                     $("#searchString").attr('style','1px solid #c8d1d3');
                     $("#repolist").attr('style','1px solid #c8d1d3');
+                    document.getElementById("main_search_button").disabled = true;
+                    document.getElementById("searchString").disabled = true;
+                    document.getElementById("repoList").disabled = true;
                     myURL="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;  //if left
                     flag=1;
                 }

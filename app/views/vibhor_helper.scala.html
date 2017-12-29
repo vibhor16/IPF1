@@ -333,12 +333,14 @@
             <!-- <li role="tab2">
             <a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab" onclick="setUtilitiesTab()">Utilities</a>
             </li> -->
-            <li role="tab3">
-			
-			@if(FINAL_ALL_PATHS.size()>0){
-              	 <a href="/ajax/@ajax_CLIENT_IP/graph" target="_blank" style="    font-weight: bold;font-size: large;">View Path Flows*</a>
-						}
-           </li>
+			  <li role="tab3" style="margin:10 0 5 10;">
+
+			  @if(FINAL_ALL_PATHS.size()>0){
+				  <button id="view_path_flows_btn" onclick="window.open('/ajax/@ajax_CLIENT_IP/graph')" type="button" class="btn btn-viewPathFlows btn-vibrate" style="width: 100%;margin-left: 0;">View Path Flows</button>
+			  }else{
+				  <button id="view_path_flows_btn" type="button" class="btn btn-viewPathFlows" style="width: 100%;margin-left: 0;" disabled>View Path Flows</button>
+			  }
+			  </li>
           </ul>
           
           <p style="margin-top: 2%;margin-right: 2%;" id="search_duration"></p>

@@ -14,6 +14,8 @@
             <div style="text-align: center;"><b style="font-size: 55px;">Impact Path Flow</b></div>
         </div>
         <div class="loader"></div>
+        <div id="percent_loaded" style="text-align: center;margin-top: 3%;"></div>
+
         <script>
 
                 var CLIENT_IP = '@CLIENT_IP';
@@ -38,7 +40,7 @@
                         success: function (data) {
                             var call = setInterval(function () {
                                 getProgDirTraversed(call)
-                            }, 5000);
+                            }, 100);
 
                         }
 
@@ -58,7 +60,9 @@
                         success: function (data) {
 
                             percent = Number(data);
-                                console.log("percent: "+percent);
+                            console.log("percent: "+percent);
+                            document.getElementById('percent_loaded').innerText=percent+"%";
+                            debugger;
                              if(percent>=100)
                               {
 

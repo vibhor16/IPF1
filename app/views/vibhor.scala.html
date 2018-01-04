@@ -1,5 +1,5 @@
 @(FILE_DIRECTORY_PATH : LinkedHashMap[String,String], selectedRepository: String, popupText: String, GLOBAL_FILE_COUNT: Integer, selectRepoList: ArrayList[String], FINAL_ALL_PATHS: LinkedHashMap[Integer, ArrayList[String]] , colorSelectedFunctions: ArrayList[String], displayTillLevel: Integer, CURRENT_PATH: ArrayList[String], ALL_SEARCH_STRINGS : ArrayList[String] , ALL_REFINED_HM :  ArrayList[LinkedHashMap[String, ArrayList[String]]] , ALL_TYPE_COUNTS : ArrayList[LinkedHashMap[String,String]], ajax_CLIENT_IP : String)
-@import scala.Predef; var func_count= 1; var level_count= 1; var main_index= -1; var cur_count = 1; var repoName= "";
+@import scala.Predef; var func_count= 1; var level_count= 1; var main_index= -1; var cur_count = 1; var repoName= ""; var counter= 1;
 
 
 <html>
@@ -156,7 +156,7 @@
                   </li>
                 </ul>
 
-                <div class="row scroll4" style="width:100%" >
+                <div class="row scroll4" style="float:none" >
                   <div class="col-lg-12">
 
                     <div class="section"  style="height: 161px;">
@@ -172,11 +172,11 @@
 
                           <ul class="nav nav-tabs" id="current_path_area" role="tablist" style="margin-bottom: 0px;">
 
-
+                            @(counter=1)
                           @for(curr_string <- CURRENT_PATH){
                             @if(level_count<=displayTillLevel){
 
-                              @if(level_count%5!=0){
+                              @if(counter<=4){
                                 <li role="step">
                                   <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
                                     <div class="icon">@cur_count</div>
@@ -208,7 +208,9 @@
                                     </div>
                                   </a>
                                 </li>
+                                @(counter+=1)
                               }else{
+                                @(counter=2)
                               </ul>
                           <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;margin-top: 10px;">
                             <li role="step">
@@ -359,7 +361,7 @@
                   </div>
 
 
-                  <div class="card-body no-padding tab-content" style="overflow-y: scroll;height: 60%;">
+                  <div class="card-body no-padding tab-content" style="overflow-y: auto;height: 60%;">
                     <div role="tabpanel" class="tab-pane active" id="tab1" style="height: 100%">
 
                       <div class="card-body no-padding">

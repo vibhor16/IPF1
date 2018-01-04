@@ -63,8 +63,6 @@ var SEARCH_STRING='@SEARCH_STRING';
 	for(value in keys){
         var parent = keys[value];
 		var children=map[parent];
-//		var children1=children0.replace("["," ");
-//		var childrenProper=children1.replace("]"," ")
 
 		if(children != null) {
 			for (i = 0; i < children.length; i++) {
@@ -82,7 +80,11 @@ var SEARCH_STRING='@SEARCH_STRING';
 
 	}
 }
-
+function toImage(){
+    var canvas=document.getElementById("springydemo");
+	var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+	window.location.href=image;
+}
 jQuery(function(){
 	var springy = window.springy = jQuery('#springydemo').springy({
 		graph: graph,
@@ -100,5 +102,6 @@ jQuery(function(){
 		</canvas>
 	</div>
 </div>
+<button class="btn btn-primary" id="click_image" onclick="toImage()" style="margin-top:0">Take Snap</button>
 </body>
 </html>

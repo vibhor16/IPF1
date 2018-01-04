@@ -16226,3 +16226,56 @@ footer.app-footer {
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
+
+.console_notice:nth-child(odd){
+  background: #24537b;
+  margin: 0;
+  min-height: 3.7em;
+  padding-top: 3px;
+  padding-left: 4px;
+  border: 1px solid #0d416e;
+}
+.console_notice:nth-child(even){
+  background: #3a7ab0;
+  border: 1px solid #1a6eb5;
+  min-height: 3.7em;
+  margin: 0;
+  padding-left: 4px;
+  padding-top: 3px;
+}
+.console_error{
+  background: #840808;
+  border: 1px solid #8b1d1d;
+  min-height: 3.7em;
+  margin: 0;
+  padding-left: 4px;
+  padding-top: 3px;
+}
+.console{
+  width: inherit;
+  height: 30em;
+  border: 1px solid #141313;
+  background: #080808;
+  color: white;
+  font-size: 0.6em;
+  border-radius: 4px;
+  word-break: break-word;
+}
+.scroll4 {
+  overflow: auto;
+  float: left;
+}
+
+.scroll4::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scroll4::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 20px;
+}
+
+.scroll4::-webkit-scrollbar-track {
+  background: #ddd;
+  border-radius: 20px;
+}

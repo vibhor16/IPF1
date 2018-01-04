@@ -253,7 +253,7 @@ public class Application extends Controller {
             String pls_funcName=temp_requestURI_array[3];
             clientObject.newSearch(level,pls_funcName);
             if(clientObject.popupText.equals("AlreadySearched")){
-                return ok(Json.toJson("The string '"+pls_funcName+" is already searched"));
+                return ok(Json.toJson("Already searched - '"+pls_funcName+"'"));
             }else {
                 return ok(vibhor.render(
                         clientObject.FILE_DIRECTORY_PATH,

@@ -244,7 +244,7 @@ public class Client {
     }
 
 
-    //receives level of UI and string eg - ordcvp.pls-po_line_item
+    //receives level of UI and string eg - ordrcvb.pls-po_line_item
     public void newSearch(String level, String pls_funcName)  {
 
         this.GLOBAL_FILE_COUNT = 0;
@@ -253,39 +253,46 @@ public class Client {
         int intLevel = Integer.parseInt(level);
 
         //contains current selected fn calls that need to be colored
-        String newColorString = (intLevel - 1) + "-" + pls_funcName;
-        if (!colorSelectedFunctions.isEmpty()) {
 
-            //contains selected fn in the form of: 1-ordcv.pls-po_line_item_online
-            if (!colorSelectedFunctions.contains(newColorString)) {
-                if ((intLevel - 2) < colorSelectedFunctions.size()) {
-                    colorSelectedFunctions.set(intLevel - 2, newColorString);
-                } else
-                    colorSelectedFunctions.add(newColorString);
-            }
-        } else {
-            colorSelectedFunctions.add(newColorString);
-        }
 
         displayTillLevel = intLevel;
         String newString = driverClassObject.getNewSearchString(pls_funcName);
 
-
         if (!isAlreadySearched(newString)) {
-            if (intLevel <= CURRENT_PATH.size())
-                setToCurrentPath(intLevel, newString, newColorString);
-            else
-                addToCurrentPath(newString);
+            addToCurrentPath(newString);
             execute(newString);
+            String newColorString = (intLevel - 1) + "-" + pls_funcName;
+            if (!colorSelectedFunctions.isEmpty()) {
+
+                //contains selected fn in the form of: 1-ordcv.pls-po_line_item_online
+                if (!colorSelectedFunctions.contains(newColorString)) {
+                    if ((intLevel - 2) < colorSelectedFunctions.size()) {
+                        colorSelectedFunctions.set(intLevel - 2, newColorString);
+                    } else
+                        colorSelectedFunctions.add(newColorString);
+                }
+            } else {
+                colorSelectedFunctions.add(newColorString);
+            }
         }
+        if (intLevel <= CURRENT_PATH.size())
+            setToCurrentPath(intLevel, pls_funcName);
+
+
     }
 
+    public boolean noEntryAtThisLevel(int level){
+        for(String temp:colorSelectedFunctions){
+            if(temp.contains(level+""))
+                return false;
+        }
+        return true;
+    }
     public void pathTerminators(String level, String file_name) {
         int flagForPls = 0;
-        if (file_name.contains(".pls-")) {
+        if (file_name.contains(".pls-"))
             flagForPls = 1;
-            file_name = driverClassObject.getNewSearchString(file_name);
-        }
+
 
         int intLevel = Integer.parseInt(level);
 
@@ -294,11 +301,15 @@ public class Client {
         if (!colorSelectedFunctions.isEmpty()) {
 
             //contains selected fn in the form of: 1-ordcv.pls-po_line_item_online
-            if (!colorSelectedFunctions.contains(newColorString)) {
+            if (!colorSelectedFunctions.contains(newColorString.toLowerCase())) {
                 if ((intLevel - 2) < colorSelectedFunctions.size()) {
                     colorSelectedFunctions.set(intLevel - 2, newColorString);
-                } else
-                    colorSelectedFunctions.add(newColorString);
+                } else{
+                    if(noEntryAtThisLevel(intLevel-1))
+                        colorSelectedFunctions.add(newColorString);
+                    else
+                        colorSelectedFunctions.set(intLevel-1,newColorString);
+                }
             }
         } else {
             colorSelectedFunctions.add(newColorString);
@@ -306,7 +317,7 @@ public class Client {
 
         displayTillLevel = intLevel;
         if (intLevel <= CURRENT_PATH.size())
-            setToCurrentPath(intLevel, file_name, newColorString);
+            setToCurrentPath(intLevel, file_name);
         else
             addToCurrentPath(file_name);
         ArrayList<String> temp = new ArrayList<>();
@@ -321,8 +332,6 @@ public class Client {
         System.out.println("ALL paths:  " + FINAL_ALL_PATHS);
         if (flagForPls == 0)
             showFileContents(file_name);
-
-
     }
 
     public void execute(String searchString) {
@@ -358,26 +367,31 @@ public class Client {
         CURRENT_PATH.add(functionCall);
     }
 
-    public void setToCurrentPath(int level, String functionCall, String newColorString) {
+    public void setToCurrentPath(int level, String functionCall) {
+
         int index = level - 1;
+        String newFunctionCall="";
+        String newColorString=index + "-" + functionCall;;
         ArrayList<String> temp = new ArrayList<>();
+
+        if(functionCall.contains(".pls"))
+            newFunctionCall = driverClassObject.getNewSearchString(functionCall);
 
         for (int i = 0; i < index; i++) {
             temp.add(CURRENT_PATH.get(i));
         }
-        temp.add(functionCall);
+        temp.add(newFunctionCall.toUpperCase());
         CURRENT_PATH = temp;
 
         temp = new ArrayList<>();
 
+        index = index-1;
         for (int i = 0; i < index; i++) {
             temp.add(colorSelectedFunctions.get(i));
         }
-        temp.add(newColorString);
+        if(!temp.contains(newColorString.toLowerCase()))
+             temp.add(newColorString.toLowerCase());
         colorSelectedFunctions = temp;
-        System.out.println("setTo index: " + index + "  current : " + CURRENT_PATH);
-
-        System.out.println("Level:  " + level + "New color: " + colorSelectedFunctions);
     }
 
     public void removeFromCurrentPath(String functionCall) {

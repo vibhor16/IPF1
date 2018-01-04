@@ -97,6 +97,8 @@
 						<div style="cursor:pointer" onclick="moreOptions()">Advanced Options</div>
 						<button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" style="width: 100%;margin-left: 0;">Search <i class="fa fa-search"></i></button>
 						<button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="width: 100%;margin-left: 0" >New Search <i class="fa fa-refresh"></i></button>
+						<div style="margin-top:20%;">Console</div>
+					    <div id="left_console" class="console scroll4"></div>
 
 
 					</div>
@@ -151,7 +153,7 @@
         </li>
       </ul>
 	  
-	  <div class="row">
+	  <div class="row scroll4" style="width:100%">
 		<div class="col-lg-12">
     
 		<div class="section"  style="height: 161px;">
@@ -164,7 +166,7 @@
 			</div>
             <div class="section-body" style="padding-top: 15px;">
               <div class="step" >
-    <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;">
+    <ul class="nav nav-tabs " id="current_path_area" role="tablist" style="margin-bottom: 0px;">
 	
  
 	   @for(curr_string <- CURRENT_PATH){
@@ -403,10 +405,11 @@
 								
 								@if(ALL_TYPE_COUNTS(main_index).get("pls")=="0" && ALL_TYPE_COUNTS(main_index).get("fmb")=="0" && ALL_TYPE_COUNTS(main_index).get("pc")=="0" && ALL_TYPE_COUNTS(main_index).get("trg")=="0" && ALL_TYPE_COUNTS(main_index).get("h")=="0"){
 										 
-											<div class="col-md-12 col-sm-12">
+											<div class="col-md-12 col-sm-12" hidden>
 
 											<div class="alert alert-danger  alert-dismissible" role="alert" style="background-color: rgba(212, 59, 138, 0.23)"><i class="fa fa-warning"></i>
-												 <p>No results found for this string</p>											</div>
+												 <p>No results found for this string</p>
+											</div>
 											</div>
 							
 									 @if(level_count>0){

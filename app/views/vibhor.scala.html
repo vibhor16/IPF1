@@ -97,6 +97,9 @@
 
                     <button id="main_search_button" type="button" onclick="mainSearch('left','','','')"  class="btn btn-primary" style="width: 100%;margin-left: 0;">Search <i class="fa fa-search"></i></button>
                     <button id="main_new_search" type="button" onclick="onNewSearchClick()"  class="btn btn-warning" style="width: 100%;margin-left: 0" >New Search <i class="fa fa-refresh"></i></button>
+                    <div style="margin-top:20%;">Console</div>
+                    <div id="left_console" class="console scroll4"></div>
+
 
 
                   </div>
@@ -153,7 +156,7 @@
                   </li>
                 </ul>
 
-                <div class="row">
+                <div class="row scroll4" style="width:100%" >
                   <div class="col-lg-12">
 
                     <div class="section"  style="height: 161px;">
@@ -167,14 +170,14 @@
                       <div class="section-body" style="padding-top: 15px;">
                         <div class="step" >
 
-                          <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;">
+                          <ul class="nav nav-tabs" id="current_path_area" role="tablist" style="margin-bottom: 0px;">
 
 
                           @for(curr_string <- CURRENT_PATH){
                             @if(level_count<=displayTillLevel){
 
                               @if(level_count%5!=0){
-                                <li role="step" id="current_path_area">
+                                <li role="step">
                                   <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
                                     <div class="icon">@cur_count</div>
                                     <div class="heading">
@@ -1284,21 +1287,23 @@
               });
 
             }
-            function displayPopUp(heading,content)
+            var console_content="";
+            function clearLeftConsole(){
+                $("#left_console").html("");
+            }
+            function addToLeftConsole(heading,content)
             {
 
-
               //Does not contain submit button
-              if(heading=="Notice" || heading=="Error")
-              {
-
-                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px' id='pop_up'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;'><div class='modal-content' id='pop_up_content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;word-wrap:break-word;'><h4>"+content+"</h4></div></div></div></div></div>";
-                $('#pop_up').delay(2000).fadeOut(1500);
-              }
+              if(heading=="Notice")
+                document.getElementById("left_console").innerHTML+="<p class='console_notice'>"+content+"</p>";
+              else
+              if(heading=="Error")
+                document.getElementById("left_console").innerHTML+="<p class='console_error'>"+content+"</p>";
               else
               {
                 //Contains submit button
-                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;margin-left: 10%;margin-right: 10%;'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;height:300px;word-wrap:break-word;'>"+content+"</div><div class='modal-footer'><button type='button' class='btn btn-sm btn-default' onclick='moreOptionsSubmit()' style='color:white'>Submit</button><button type='button' class='btn btn-sm btn-default' onclick='remove_modal()' style='color:white'>Close</button></div></div></div></div></div>";
+//                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;margin-left: 10%;margin-right: 10%;'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;height:300px;word-wrap:break-word;'>"+content+"</div><div class='modal-footer'><button type='button' class='btn btn-sm btn-default' onclick='moreOptionsSubmit()' style='color:white'>Submit</button><button type='button' class='btn btn-sm btn-default' onclick='remove_modal()' style='color:white'>Close</button></div></div></div></div></div>";
               }
               //Keep selected filter options intact
 
@@ -1336,10 +1341,21 @@
 
               }
 
+              console_content=$("#left_console").html();
+            }
 
-
-
-
+            function restoreLeftConsoleData(){
+//                for(var key in console_content_map){
+//                       var tempArray = console_content_map[key];
+//                       for(var i=0;i<tempArray.length;i+=2){
+//                         if(tempArray[i]=="Notice")
+//                           document.getElementById("left_console").innerHTML+="<p class='console_notice'>"+tempArray[i+1]+"</p>";
+//                         else
+//                         if(tempArray[i]=="Error")
+//                           document.getElementById("left_console").innerHTML+="<p class='console_error'>"+tempArray[i+1]+"</p>";
+//                       }
+//               }
+              $("#left_console").html(console_content);
             }
             function moreOptions()
             {
@@ -1397,7 +1413,7 @@
 
               // var content=heading+byDirLeft+byDirRight+byType;
               var content=heading+byType;
-              displayPopUp("Filters",content);
+              addToLeftConsole("Filters",content);
               filterInit();
               //window.location="/ajax/"+CLIENT_IP+"/index";
             }
@@ -1605,84 +1621,43 @@
 
               var content;
               $('#search_duration').html("00:00:00");
-              $('#current_path_area').html("");
               var myURL,flag=0;
-              //lert("@selectedRepository");
               percent=0;
               searchString=document.getElementById("searchString").value;
 
               selRepo=$( "#repoList option:selected" ).text();
 
 
-//                 var myURL="/ajax/"+CLIENT_IP+"/isStringAlreadySearched/"+searchString;
-//                 $.ajax({
-//
-//                   url: myURL,
-//                   async: true,
-//                   success:function(data){
-//                     console.log("Left: "+data+"  String: "+searchString);
-//
-//                     if(data)
-//                     {
-//                       alreadySearchedFlag=true;
-//                       console.log("left Inside alreadySearchedFlag: "+alreadySearchedFlag);
-//
-//                       content="<h3>The string is already searched!</h3>";
-//                       displayPopUp("Notice",content);
-//                       return;
-//                     }else{
-//                       alreadySearchedFlag=false;
-//                     }
-//
-//                   }
-//                 });
-
-
-
               if(type=="left")
               {
-
+                console_content_array = [];  //Re-initialize this array for left_console
                 allSearchStrings=[]; // For a new search it should be empty
-//                 debugger;
-//                 if(!allSearchStrings.includes(searchString+"/"+selRepo))
-//                 {
-//                 	allSearchStrings.push(searchString+"/"+selRepo);
-//                 }
-                 // Should be removed as left initiates new search
-//                 else
-//                 {
-//                    alreadySearchedFlag=true;
-//                 	content="The string is already searched!";
-//                 	displayPopUp(content);
-//                 	return;
-//                 }
-
-
                 if(selRepo=="Please Select.." && searchString.trim().length==0)
                 {
                   content="Missing: Search String & Release";
                   $('#repoList').attr('style','border:2px solid red');
                   $('#searchString').attr('style','border:2px solid red');
-                 // displayPopUp("Error",content);
+                 // addToLeftConsole("Error",content);
                 }
                 else
                 if(selRepo=="Please Select..")
                 {
                   content="Missing: Release";
                   $('#repoList').attr('style','border:2px solid red');
-                 // displayPopUp("Error",content);
+                 // addToLeftConsole("Error",content);
                 }
                 else
                 if(searchString.trim().length==0)
                 {
                   content="Missing: Search String";
                   $('#searchString').attr('style','border:2px solid red');
-                  //displayPopUp("Error",content);
+                  //addToLeftConsole("Error",content);
                 }
                 else
                 {
                     $("#searchString").attr('style','1px solid #c8d1d3');
                     $("#repolist").attr('style','1px solid #c8d1d3');
+                    $("#current_path_area").html("");
                     document.getElementById("main_search_button").disabled = true;
                     document.getElementById("searchString").disabled = true;
                     document.getElementById("repoList").disabled = true;
@@ -1693,58 +1668,12 @@
               else
               {
 
-//                 var myURL="/ajax/"+CLIENT_IP+"/isStringAlreadySearched/"+key+"-"+func_title;
-//                 $.ajax({
-//
-//                   url: myURL,
-//                   async: true,
-//                   success:function(data){
-//                     if(data)
-//                     {
-//                        alreadySearchedFlag=true;
-//                       console.log("not left Inside alreadySearchedFlag: "+alreadySearchedFlag);
-//
-//                       content="<h3>The string is already searched!</h3>";
-//                       displayPopUp("Notice",content);
-//                       return;
-//                     }else{
-//                       alreadySearchedFlag=false;
-//                     }
-//                         console.log("Not left: "+data+"  String: "+key+"-"+func_title+"  alreadySearchedFlag: "+alreadySearchedFlag);
-//
-//                   }
-//
-//                 });
-//                debugger;
-//                 if(!allSearchStrings.includes(key+'-'+func_title+"/"+selRepo))
-//                 {
-//                 	allSearchStrings.push(key+'-'+func_title+"/"+selRepo);
-//                 }
-//                 else
-//                 {
-//                    alreadySearchedFlag=true;
-//                 	content="This string is already searched!";
-//                 	displayPopUp(content);
-//                 	return;
-//                 }
-
                 myURL="/ajax/"+CLIENT_IP+"/newsearch/"+level_count+"/"+key+"-"+func_title; // if not left
                 flag=1;
 
               }
 
-
-
-//              disableLeftPanel(); //Disabled for entire search of this main string
-
-              //alert("type: "+type+" level_count: "+level_count+" key: "+key+" func_title: "+func_title);
-              //alert("url: "+myURL);
-
-
-
-
-//              if(flag==1 && !alreadySearchedFlag)
-              if(flag==1)
+             if(flag==1)
               {
                 flag=0;
 //                alreadySearchedFlag=false;
@@ -1753,9 +1682,25 @@
               }//flag
             }
 
+
+            // Class name "title" is reserved
+            function getSearchStringAt(position){
+              var allSearchedStrings=document.getElementsByClassName("title");
+              if(position == "last"){
+                  return allSearchedStrings[allSearchedStrings.length-1].textContent;
+              }else
+              if(position == "first"){
+                return allSearchedStrings[0].textContent;
+              }else {
+                return allSearchedStrings[position].textContent;
+              }
+              return null;
+            }
+
+            var alreadySearchedString=false;
             function  initiateSearching(myURL,type,level_count,key,func_title){
 
-                var alreadySearchedString=false;
+
                  //Initiates the search whether new or main
                 $.ajax({
 
@@ -1766,9 +1711,12 @@
                       // data can be entire page length around 7500, data length 100 for already search to be displayed only
 
                           if(data.length<100) {
-                            displayPopUp("Notice", data);
+                            addToLeftConsole("Error", data);
                             forceStop=1;
+                            alreadySearchedString = true;
                             return;
+                          }else{
+                            alreadySearchedString = false;
                           }
 
 
@@ -1832,10 +1780,10 @@
                 async: true,
                 success:function(data){
                   //alert(data);
+                  ;
                   console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
                   if(data==="-1" || data=="alreadySearched"){
 
-                      debugger;
                       forceStop=1;
                       alreadySearchedFlag=1;
                       console.log("force stop: "+forceStop+"  zeroProgressCounter: "+zeroProgressCounter);
@@ -1860,7 +1808,6 @@
 
               if(percent>=100 || forceStop==1)
               {
-                  debugger;
                 console.log("inside");
                 forceStop=0;
 //                document.getElementById("main_search_button").disabled = false;
@@ -1883,34 +1830,44 @@
 
                     if(parts[1].includes("No results found for this string"))
                     {
-                     // displayPopUp("Notice","<h3>No further mention for this string</h3>");
+                     // addToLeftConsole("Notice","<h3>No further mention for this string</h3>");
                       var notFoundMessage='<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top: 5%;background-color: rgba(249, 28, 8, 0.81);color: white;">No Results Found For This String!</div>';
-                      $('#area_main_card').html(notFoundMessage);
+//                      $('#area_main_card').html(notFoundMessage);
+
                       if(type1=='left') //First main search moment
                       {
                           $('#area_result_card').html('');
                           document.getElementById("main_new_search").disabled = true;
+                          document.getElementById("searchString").disabled = false;
+                          document.getElementById("repoList").disabled = false;
+                          document.getElementById("main_search_button").disabled = false;
                           document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
 
                       }
                       var level="@level_count";
                       console.log("type: "+type1+" level_count: "+level_count1+" key: "+key1+"  func_title: "+func_title1);
+                      if(!alreadySearchedString) {
+                        if (level_count1 > 1) {
 
-                      if(level_count1>1)
-                      {
-                        var myURL="/ajax/"+CLIENT_IP+"/pathterminators/"+level_count1+"/"+key1+"-"+func_title1;
-                        $.ajax({
+                          var myURL = "/ajax/" + CLIENT_IP + "/pathterminators/" + level_count1 + "/" + key1 + "-" + func_title1;
+                          $.ajax({
 
-                          url: myURL,
-                          async: true,
-                          success:function(data){
-                            var parts=data.split("<!-- vibhor -->");
-                            $('#main_card_body').html(parts[1]);
-                            attachFocusOutListeners();
-                            populateReleaseList();
-                            $('#search_duration').html(elapsedTimeValue);
-                              }
-                        });
+                            url: myURL,
+                            async: true,
+                            success: function (data) {
+                              var parts = data.split("<!-- vibhor -->");
+                              $('#main_card_body').html(parts[1]);
+                              attachFocusOutListeners();
+                              populateReleaseList();
+                              restoreLeftConsoleData();
+                              addToLeftConsole("Notice", "PATH FOUND!!");
+                              $('#search_duration').html(elapsedTimeValue);
+                            }
+                          });
+
+                        } else {
+                            addToLeftConsole("Error", "Not found - '" + searchString + "'");
+                        }
                       }
 
                     }
@@ -1919,12 +1876,14 @@
                         $('#main_card_body').html(parts[1]);
                         document.getElementById("main_new_search").disabled = false;
                         document.getElementById("main_search_button").disabled = true;
-
+                        restoreLeftConsoleData();
+                        if(!alreadySearchedString)
+                          addToLeftConsole("Notice","Success - '"+getSearchStringAt("last")+"'");
                     }
 
                     // getPastSearches();
                     populateReleaseList();
-//                    debugger;
+
                     if(selRepo){
                       selectRelease(selRepo);
                     }

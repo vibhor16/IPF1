@@ -814,6 +814,13 @@
 
             }
 
+            function disableLeftPanel(){
+                document.getElementById("searchString").disabled = true;
+                document.getElementById("repoList").disabled = true;
+                document.getElementById("main_search_button").disabled = true;
+                $('#repoList').val(selRepo);
+            }
+
 
             function pathterminator(ajax_CLIENT_IP,level_count,key){
               // console.log("PathTerm VIbhor:  "+ajax_CLIENT_IP+"  "+level_count+"  "+key);
@@ -1877,6 +1884,7 @@
                               $('#main_card_body').html(parts[1]);
                               attachFocusOutListeners();
                               populateReleaseList();
+                              disableLeftPanel(); // Should disable the left panel
                               restoreLeftConsoleData();
                               addToLeftConsole("Notice", "PATH FOUND!!");
                               $('#search_duration').html(elapsedTimeValue);

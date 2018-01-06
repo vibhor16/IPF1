@@ -244,6 +244,7 @@ public class Client {
     }
 
 
+    public String currentSearchString="";
     //receives level of UI and string eg - ordrcvb.pls-po_line_item
     public void newSearch(String level, String pls_funcName)  {
 
@@ -255,12 +256,12 @@ public class Client {
         //contains current selected fn calls that need to be colored
 
 
-        displayTillLevel = intLevel;
-        String newString = driverClassObject.getNewSearchString(pls_funcName);
+        currentSearchString = driverClassObject.getNewSearchString(pls_funcName);
 
-        if (!isAlreadySearched(newString)) {
-            addToCurrentPath(newString);
-            execute(newString);
+        if (!isAlreadySearched(currentSearchString)) {
+            displayTillLevel = intLevel;
+            addToCurrentPath(currentSearchString);
+            execute(currentSearchString);
             String newColorString = (intLevel - 1) + "-" + pls_funcName;
             if (!colorSelectedFunctions.isEmpty()) {
 
@@ -276,11 +277,9 @@ public class Client {
             }
         }
         if (intLevel <= CURRENT_PATH.size()) {
-            if(!isStringAlreadySearched(newString))
+            if(!isStringAlreadySearched(currentSearchString))
                 setToCurrentPath(intLevel, pls_funcName);
         }
-
-
     }
 
     public boolean noEntryAtThisLevel(int level){

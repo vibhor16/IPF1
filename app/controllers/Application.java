@@ -178,8 +178,8 @@ public class Application extends Controller {
                 int numFilesInThisRepo = clientObject.allRepoFileCount.get(thisRepoPath);
                 // System.out.println("[PROGRESS] Traversed: "+clientObject.GLOBAL_FILE_COUNT+"  total: "+numFilesInThisRepo);
                 double percent = (double) clientObject.GLOBAL_FILE_COUNT * 100 / numFilesInThisRepo;
-
-                return ok(Json.toJson(percent));
+                String currentSearchString = clientObject.currentSearchString;
+                return ok(Json.toJson(percent+":"+currentSearchString+":"+clientObject.typeOfThisSearch));
 
         }else
         if(callRequestURI.contains("test")){

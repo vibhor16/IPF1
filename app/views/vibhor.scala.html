@@ -1790,7 +1790,9 @@
                 async: true,
                 success:function(data){
                   //alert(data);
-                  ;
+                  var currSearchString = "";
+                  var typeOfSearch = ""; // level_1 or level>1
+                  var progressString = "";
                   console.log("Progress:  "+data+"  zeroProgressCounter: "+zeroProgressCounter);
                   if(data==="-1" || data=="alreadySearched"){
 
@@ -1801,14 +1803,20 @@
                       return;
                   }
 
-                    percent = Number(data);
+                    percent = Number(data.split(":")[0]);
+                    currSearchString = data.split(":")[1];
+                    typeOfSearch = data.split(":")[2];
                     $('#progress_bar').css('width', percent + '%');
 
                     if(alreadySearchedFlag==1){
                       $('#progress_bar').css('width', '100%');
                     }
-                    var progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
-                    $('#loader_title').html(progressString);
+                    if(searchString != "")
+                       progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
+                    else
+                       progressString = "Searching <b>" + currSearchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
+
+                  $('#loader_title').html(progressString);
                     //console.log("percent2: "+percent);
 
 

@@ -1633,7 +1633,7 @@
               $('#search_duration').html("00:00:00");
               var myURL,flag=0;
               percent=0;
-              searchString=document.getElementById("searchString").value;
+              searchString=document.getElementById("searchString").value.trim();
 
               selRepo=$( "#repoList option:selected" ).text();
 
@@ -1642,7 +1642,7 @@
               {
                 console_content_array = [];  //Re-initialize this array for left_console
                 allSearchStrings=[]; // For a new search it should be empty
-                if(selRepo=="Please Select.." && searchString.trim().length==0)
+                if(selRepo=="Please Select.." && searchString.length==0)
                 {
                   content="Missing: Search String & Release";
                   $('#repoList').attr('style','border:2px solid red');
@@ -1657,7 +1657,7 @@
                  // addToLeftConsole("Error",content);
                 }
                 else
-                if(searchString.trim().length==0)
+                if(searchString.length==0)
                 {
                   content="Missing: Search String";
                   $('#searchString').attr('style','border:2px solid red');

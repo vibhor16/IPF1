@@ -156,7 +156,7 @@
                   </li>
                 </ul>
 
-                <div class="row scroll4" style="float:none" >
+                <div id="current_path" class="row scroll4" style="float:none" >
                   <div class="col-lg-12">
 
                     <div class="section"  style="height: 161px;">
@@ -1298,10 +1298,10 @@
 
               //Does not contain submit button
               if(heading=="Notice")
-                document.getElementById("left_console").innerHTML+="<p class='console_notice'>"+content+"</p>";
+                document.getElementById("left_console").innerHTML+="<p class='console_rows notice'>"+content+"</p>";
               else
               if(heading=="Error")
-                document.getElementById("left_console").innerHTML+="<p class='console_error'>"+content+"</p>";
+                document.getElementById("left_console").innerHTML+="<p class='console_rows error'>"+content+"</p>";
               else
               {
                 //Contains submit button
@@ -1358,6 +1358,14 @@
 //                       }
 //               }
               $("#left_console").html(console_content);
+            }
+            function scrollToBottom(){
+              //To keep scroll bar bottom for left_console
+              if( $('.console_rows').length > 0)
+                $('#left_console').scrollTop($('.console_rows')[$('.console_rows').length-1].scrollHeight*($('.console_rows').length))
+              //To keep scroll bar bottom for current_path
+              if( $('.step').length > 0)
+                $('#current_path').scrollTop($('.step')[$('.step').length-1].scrollHeight*($('.step').length))
             }
             function moreOptions()
             {
@@ -1864,6 +1872,7 @@
                               restoreLeftConsoleData();
                               addToLeftConsole("Notice", "PATH FOUND!!");
                               $('#search_duration').html(elapsedTimeValue);
+                              scrollToBottom(); //Scroll Top and Left areas to bottom
                             }
                           });
 
@@ -1881,10 +1890,12 @@
                         restoreLeftConsoleData();
                         if(!alreadySearchedString)
                           addToLeftConsole("Notice","Success - '"+getSearchStringAt("last")+"'");
+
                     }
 
                     // getPastSearches();
                     populateReleaseList();
+                    scrollToBottom(); //Scroll Top and Left areas to bottom
 
                     if(selRepo){
                       selectRelease(selRepo);

@@ -19,11 +19,11 @@
 
   </head>
   <body onload="init()">
-    <div class="row" style="height: 8px">
+    <div class="row" style="height: 4px">
       <div class="col-lg-12" style="padding-bottom: 0px;">
         <div class="card card-tab" style="margin-top:0">
-          <div class="progress" style="height: 8px;margin-bottom: 0px;">
-            <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+          <div class="progress" style="height: inherit;margin-bottom: 0px;">
+            <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0">
 
             </div>
           </div>
@@ -1779,6 +1779,7 @@
                 getElapsedSearchTime()
               }, 500);
 
+                $('#progress_bar').css('width', '0'); //Should come back to 0 after every search
 
 
             }
@@ -1815,9 +1816,7 @@
                     typeOfSearch = data.split(":")[2];
                     $('#progress_bar').css('width', percent + '%');
 
-                    if(alreadySearchedFlag==1){
-                      $('#progress_bar').css('width', '100%');
-                    }
+
                     if(searchString != "")
                        progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
                     else
@@ -1840,7 +1839,7 @@
                 clearInterval(call);
                 $('#loader').attr("class", "");
                 $('#loader_icon').html("");
-                $('#progress_bar').css('width', '100%');
+
 
 
                 //window.location="/ajax/"+CLIENT_IP+"/mainSearch/2/"+searchString+"/"+selRepo;
@@ -1928,6 +1927,7 @@
 //                document.getElementById("main_search_button").disabled = true;
                 document.getElementById("stop_search_button").disabled = false;
               }
+
             }
 
             /*********** Stop this search ************/

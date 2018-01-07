@@ -362,70 +362,70 @@
        
             		<div class="card-body no-padding">
 						<div class="row no-gap">
-							<div class="col-xs-12">
+
 							 <div class="panel-group" id="result_main_panel">
 							  	<div id="area_main_card">
 							 @if(ALL_SEARCH_STRINGS.size()==0){
-							  
+
 							<div class="col-md-12 col-sm-12">
 
 								<div class="alert alert-danger  alert-dismissible" role="alert" style="    background-color: rgba(212, 59, 138, 0.23)">
-								
+
 								<strong>Welcome!</strong> Find your location in the digital world.
 									</div>
 								</div>
-								
+
 								<div class="col-md-12 col-sm-12">
 									<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top:0px;background-color:rgba(154, 30, 220, 0.16)">
-										 
+
 										 Enter the exact search string and select the repository you want to search in and get on with finding the levels of your pathflow.
 									</div>
 								</div>
-								
+
 								<div class="col-md-12 col-sm-12">
 									<div class="alert alert-danger  alert-dismissible" role="alert" style="margin-top:0px;    background-color: rgba(108, 127, 249, 0.23)">
-										 
+
 										A Google Map for the digital world!
 									</div>
 								</div>
-							
 
-										 
+
+
 							 }
 
 							  </div>   <!-- area_main_card -->
 
-							  <div id="area_result_card">
+							  <div id="area_result_card" style="display: inline-flex">
 							 @(level_count=1)
 							 @if(ALL_SEARCH_STRINGS.size()!=0){
-							
+
 							 @for(search_string <- ALL_SEARCH_STRINGS){
-							
+
 								@(main_index+=1)
 								@if(level_count<=CURRENT_PATH.size()){
 								@if(CURRENT_PATH.get(level_count-1).equals(search_string) && level_count<=displayTillLevel){
-								
+
 								@if(ALL_TYPE_COUNTS(main_index).get("pls")=="0" && ALL_TYPE_COUNTS(main_index).get("fmb")=="0" && ALL_TYPE_COUNTS(main_index).get("pc")=="0" && ALL_TYPE_COUNTS(main_index).get("trg")=="0" && ALL_TYPE_COUNTS(main_index).get("h")=="0"){
-										 
+
 											<div class="col-md-12 col-sm-12" hidden>
 
 											<div class="alert alert-danger  alert-dismissible" role="alert" style="background-color: rgba(212, 59, 138, 0.23)"><i class="fa fa-warning"></i>
 												 <p>No results found for this string</p>
 											</div>
 											</div>
-							
+
 									 @if(level_count>0){
-										 
-										 
-										    
+
+
+
 											<!-- 	<div class="col-lg-12" style="visibility:collapse;margin-bottom: 0px">
-													   
-													  
+
+
 													  <div class="modal fade in" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block; padding-right: 17px;">
 													  <div class="modal-dialog">
 														<div class="modal-content">
 														  <div class="modal-header">
-														   
+
 															<h4 class="modal-title">Warning</h4>
 														  </div>
 														  <div class="modal-body" style="word-wrap:break-word;">
@@ -433,40 +433,40 @@
 														  </div>
 														  <div class="modal-footer">
 															<button type="button" class="btn btn-sm btn-default" onclick="remove_modal()">Close</button>
-															 
+
 														  </div>
 														</div>
 													  </div>
 													</div>
 													</div> -->
- 
+
 										 }
 										}else{
-									<div class="col-md-2 col-sm-2">
+									<div class="area_result_elements">
 									<div class="row no-gap">
 									<br>
 									 	<h4 align="middle">Level @level_count</h4>
-									    
+
 										@(level_count+=1)
 									<!--	<div><p align="middle"> For:&nbsp&nbsp'@search_string'</p></div> -->
 									</div>
-										
-										
-										 
+
+
+
 										<!-- PACKAGES -->
 										<div class="panel panel-default">
 
-									 
+
 										<div class="panel-heading" data-toggle="collapse" href="#collapse_pkg_@level_count">
 													<h4 class="panel-title">
 													  <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("pls"))</sup><span> Packages</span></pre>
 													</h4>
 										  </div>
 										  <div id="collapse_pkg_@level_count" class="panel-collapse collapsed" >
-											
+
 											 @for(key <- ALL_REFINED_HM(main_index).keySet()){
-									  
-									 
+
+
 									 	     @if(ALL_REFINED_HM(main_index).get(key)!=null){
 											<div class="panel-body">
 												<div class="col-md-12 col-sm-2 col-inside">
@@ -476,26 +476,26 @@
 															<pre class="tab"><sup>(@ALL_REFINED_HM(main_index).get(key).size)</sup><span> @key</span></pre>
 															</h4>
 														</div>
-														
+
 														@if(ALL_REFINED_HM(main_index).get(key).size>0){
 															<div id="collapse_@func_count" class="panel-collapse collapsed">
-														
+
 														}else{
 															<div id="collapse_@func_count" class="panel-collapse collapse">
-														
+
 														}
 															  @for(func_title <- ALL_REFINED_HM(main_index).get(key)){
-															   
+
 															   @if(!colorSelectedFunctions.isEmpty()){
 																@if(colorSelectedFunctions.contains((level_count-1)+"-"+key+"-"+func_title)){
-																 
-																 
+
+
 																	<div class="panel-body selected" id="@key-@func_title">
 																	<a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
 																	</div>
 																}else{
-																
-																
+
+
 																	<div class="panel-body" id="@key-@func_title">
 																	<a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
 																	</div>
@@ -505,8 +505,8 @@
 																	<a onclick="mainSearch('new','@level_count','@key','@func_title')">@func_title</a>
 																	</div>
 																}
-																
-																 
+
+
 																@(func_count+=1)
 																}
 																<div class="panel-footer" id="@key" onclick="viewFile(id)">
@@ -520,13 +520,13 @@
 													}
 											<!-- if ends here -->
 											}
-											 
+
 										</div>
 										</div>
-									 
-										  
-										
-										
+
+
+
+
 										<!-- FORMS -->
 										<div class="panel panel-default">
 										  <div class="panel-heading" data-toggle="collapse" href="#collapse_forms_@level_count">
@@ -539,19 +539,19 @@
 											}else{
 										  <div id="collapse_forms_@level_count" class="panel-collapse collapse">
 											}
-											
-											 
-											
-											
+
+
+
+
 											 @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
-								 
-				
+
+
 									 	     @if(key.indexOf(".fmb")>=0){
-											 
+
 									        @if(!colorSelectedFunctions.isEmpty()){
-											
+
 											@if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
-																
+
 											<div class="panel-body selected" id="@key">
 											<!--<a href="/ajax/@ajax_CLIENT_IP/pathterminators/@level_count/@key">@key</a>-->
 											<div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
@@ -573,9 +573,9 @@
 											<!-- for ends here -->
 										  </div>
 										</div>
-										
-										 
-										 
+
+
+
 										 <!-- BATCHES -->
 										<div class="panel panel-default">
 										  <div class="panel-heading" data-toggle="collapse" href="#collapse_batches_@level_count">
@@ -589,11 +589,11 @@
 											<div id="collapse_batches_@level_count" class="panel-collapse collapse">
 											}
 											 @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
-									  
+
 									 	     @if(key.indexOf(".pc")>=0){
 											 @if(!colorSelectedFunctions.isEmpty()){
 											@if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
-																
+
 											<div class="panel-body selected" id="@key">
 											<!--<a href="/ajax/@ajax_CLIENT_IP/pathterminators/@level_count/@key">@key</a>-->
 											<div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
@@ -615,11 +615,11 @@
 												}
 													}<!-- if ends here -->
 											}<!-- for ends here -->
-											
+
 										  </div>
 										</div>
-											
-											
+
+
 											<!-- TRIGGERS -->
 											<div class="panel panel-default">
 										  <div class="panel-heading" data-toggle="collapse" href="#collapse_trg_@level_count">
@@ -633,11 +633,11 @@
 											<div id="collapse_trg_@level_count" class="panel-collapse collapse">
 											}
 											 @for(key <- ALL_REFINED_HM(main_index).keySet().iterator){
-									  
+
 									 	     @if(key.indexOf(".trg")>=0){
 											 @if(!colorSelectedFunctions.isEmpty()){
 											@if(colorSelectedFunctions.contains((level_count-1)+"-"+key)){
-																
+
 											<div class="panel-body selected" id="@key">
 											<!--<a href="/ajax/@ajax_CLIENT_IP/pathterminators/@level_count/@key">@key</a>-->
 											<div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
@@ -648,7 +648,7 @@
 											<!--<a href="/ajax/@ajax_CLIENT_IP/pathterminators/@level_count/@key">@key</a>-->
 											<div onclick="pathterminator('@ajax_CLIENT_IP','@level_count','@key')">@key</div>
 											<a href="/ajax/@ajax_CLIENT_IP/showFileContents/@key" target="_blank"><i class="fa fa-file-code-o" style="margin-left:10px"></i></a>
-											
+
 											</div>
 												}
 												}else{
@@ -664,29 +664,29 @@
 										</div>
 
 
-										 
+
 										</div>
-										
+
 									 }
 									}
-							
-								
-								
-								
-								
+
+
+
+
+
 								}<!--end of search_string for -->
 							}<!-- end of if -->
 								</div>
 							</div>
 						</div>
-						
+
 					</div>
 					</div><!-- area_result_card ends -->
 					}
-			  
+
 		  </div>
-		  </div>
-		  </div>
+
+
 		  </div>
 		  </div><!-- tab1 end -->
 

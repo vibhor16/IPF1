@@ -366,7 +366,6 @@
 
                       <div class="card-body no-padding">
                         <div class="row no-gap">
-                          <div class="col-xs-12">
                             <div class="panel-group" id="result_main_panel">
                               <div id="area_main_card">
                               @if(ALL_SEARCH_STRINGS.size()==0){
@@ -399,7 +398,7 @@
                               </div>   <!-- area_main_card -->
 
 
-                              <div id="area_result_card">
+                              <div id="area_result_card" style="display: inline-flex">
                                 @(level_count=1)
                                 @if(ALL_SEARCH_STRINGS.size()!=0){
 
@@ -440,7 +439,7 @@
                                           }
 
                                         }else{
-                                          <div class="col-md-2 col-sm-2">
+                                          <div class="area_result_elements">
                                             <div class="row no-gap">
                                               <br>
                                               <h4 align="middle">Level @(level_count)</h4>
@@ -680,7 +679,6 @@
 
                           </div>
                         </div>
-                      </div>
                     </div>
                   </div><!-- tab1 end -->
 
@@ -1304,11 +1302,14 @@
             {
 
               //Does not contain submit button
-              if(heading=="Notice")
+              if(heading == "Notice")
                 document.getElementById("left_console").innerHTML+="<p class='console_rows notice'>"+content+"</p>";
               else
-              if(heading=="Error")
+              if(heading == "Error")
                 document.getElementById("left_console").innerHTML+="<p class='console_rows error'>"+content+"</p>";
+              else
+              if(heading == "Victory")
+                document.getElementById("left_console").innerHTML+="<p class='console_rows victory'>"+content+"</p>";
               else
               {
                 //Contains submit button
@@ -1885,7 +1886,7 @@
                               populateReleaseList();
                               disableLeftPanel(); // Should disable the left panel
                               restoreLeftConsoleData();
-                              addToLeftConsole("Notice", "PATH FOUND!!");
+                              addToLeftConsole("Victory", "PATH FOUND!!");
                               $('#search_duration').html(elapsedTimeValue);
                               scrollToBottom(); //Scroll Top and Left areas to bottom
                             }

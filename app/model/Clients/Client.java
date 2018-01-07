@@ -276,9 +276,13 @@ public class Client {
                 colorSelectedFunctions.add(newColorString);
             }
         }
-        if (intLevel <= CURRENT_PATH.size()) {
-            if(!isStringAlreadySearched(currentSearchString))
+        if (intLevel < CURRENT_PATH.size()) {
                 setToCurrentPath(intLevel, pls_funcName);
+        }
+        if(intLevel == CURRENT_PATH.size()){
+            if(!isStringAlreadySearched(currentSearchString)){
+                setToCurrentPath(intLevel, pls_funcName);
+            }
         }
     }
 

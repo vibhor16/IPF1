@@ -16255,6 +16255,11 @@ footer.app-footer {
   border: 1px solid #8b1d1d;
 }
 
+.victory{
+    background: #3ab06f;
+    border: 1px solid #2e6a49;
+}
+
 .scroll4 {
   overflow: auto;
   float: left;
@@ -16282,4 +16287,8 @@ footer.app-footer {
 ::-webkit-scrollbar-track {
   background: #ddd;
   border-radius: 20px;
+}
+.area_result_elements{
+    width: 14em;
+    padding: 0 0.75em;
 }

@@ -178,7 +178,7 @@
 
                               @if(counter<=4){
                                 <li role="step">
-                                  <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
+                                  <a href="#step1" id="step1-tab" role="tab"  aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
                                     <div class="icon">@cur_count</div>
                                     <div class="heading">
                                       <div class="title">@curr_string</div>
@@ -214,7 +214,7 @@
                               </ul>
                           <ul class="nav nav-tabs " role="tablist" style="margin-bottom: 0px;margin-top: 10px;">
                             <li role="step">
-                              <a href="#step1" id="step1-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
+                              <a href="#step1" id="step1-tab" role="tab"  aria-controls="home" aria-expanded="true" style="padding-bottom: 0px;padding-top: 0px;">
                                 <div class="icon">@cur_count</div>
                                 <div class="heading">
                                   <div class="title">@curr_string</div>
@@ -454,7 +454,7 @@
                                           <div class="panel panel-default">
 
 
-                                            <div class="panel-heading" data-toggle="collapse" href="#collapse_pkg_@level_count">
+                                            <div class="panel-heading" onclick="handleCollapse(id)" id="#collapse_pkg_@level_count">
                                               <h4 class="panel-title">
                                                 <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("pls"))</sup><span> Packages</span></pre>
                                               </h4>
@@ -468,7 +468,7 @@
                                                   <div class="panel-body">
                                                     <div class="col-md-12 col-sm-2 col-inside">
                                                       <div class="panel panel-default">
-                                                        <div class="panel-heading" data-toggle="collapse" href="#collapse_@func_count" >
+                                                        <div class="panel-heading" onclick="handleCollapse()" href="#collapse_@func_count" >
                                                           <h4 class="panel-title-nest">
                                                             <pre class="tab"><sup>(@ALL_REFINED_HM(main_index).get(key).size)</sup><span> @key</span></pre>
                                                           </h4>
@@ -526,7 +526,7 @@
 
                                               <!-- FORMS -->
                                             <div class="panel panel-default">
-                                              <div class="panel-heading" data-toggle="collapse" href="#collapse_forms_@level_count">
+                                              <div class="panel-heading" onclick="handleCollapse(id)" id="#collapse_forms_@level_count">
                                                 <h4 class="panel-title">
                                                   <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("fmb"))</sup><span> Forms</span></pre>
                                                 </h4>
@@ -574,7 +574,7 @@
 
                                                 <!-- BATCHES -->
                                               <div class="panel panel-default">
-                                                <div class="panel-heading" data-toggle="collapse" href="#collapse_batches_@level_count">
+                                                <div class="panel-heading" onclick="handleCollapse(id)" id="#collapse_batches_@level_count">
                                                   <h4 class="panel-title">
                                                     <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("pc"))</sup><span> Batches</span> </pre>
                                                   </h4>
@@ -615,7 +615,7 @@
 
                                                   <!-- TRIGGERS -->
                                                 <div class="panel panel-default">
-                                                  <div class="panel-heading" data-toggle="collapse" href="#collapse_trg_@level_count">
+                                                  <div class="panel-heading" onclick="handleCollapse(id)" id="#collapse_trg_@level_count">
                                                     <h4 class="panel-title">
                                                       <pre class="tab"><sup>(@ALL_TYPE_COUNTS(main_index).get("trg"))</sup><span> Triggers</span></pre>
                                                     </h4>
@@ -809,6 +809,20 @@
                     $('#repoList').val(selRepo);
                 }
 
+
+            }
+
+            function handleCollapse(id){
+                var outerId=id;
+                var innerId=id.split("#")[1];
+                var innerClass=document.getElementById(innerId).className;
+                if(innerClass.indexOf(' collapse') >= 0 && innerClass.indexOf(' collapsed')<0){
+                    innerClass = innerClass.replace(' collapse',' collapsed');
+                }else
+                if(innerClass.indexOf(' collapsed') >= 0){
+                    innerClass = innerClass.replace(' collapsed',' collapse');
+                }
+              document.getElementById(innerId).className=innerClass;
 
             }
 

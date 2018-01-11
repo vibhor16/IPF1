@@ -361,7 +361,7 @@
                   </div>
 
 
-                  <div class="card-body no-padding tab-content" style="overflow-y: auto;height: 60%;">
+                  <div id="main_area" class="card-body no-padding tab-content" style="overflow-y: auto;height: 60%;">
                     <div role="tabpanel" class="tab-pane active" id="tab1" style="height: 100%">
 
                       <div class="card-body no-padding">
@@ -1368,26 +1368,19 @@
               console_content=$("#left_console").html();
             }
 
-            function restoreLeftConsoleData(){
-//                for(var key in console_content_map){
-//                       var tempArray = console_content_map[key];
-//                       for(var i=0;i<tempArray.length;i+=2){
-//                         if(tempArray[i]=="Notice")
-//                           document.getElementById("left_console").innerHTML+="<p class='console_notice'>"+tempArray[i+1]+"</p>";
-//                         else
-//                         if(tempArray[i]=="Error")
-//                           document.getElementById("left_console").innerHTML+="<p class='console_error'>"+tempArray[i+1]+"</p>";
-//                       }
-//               }
+            function restoreLeftConsoleData() {
               $("#left_console").html(console_content);
             }
-            function scrollToBottom(){
+            function scrollToBottom() {
               //To keep scroll bar bottom for left_console
-              if( $('.console_rows').length > 0)
-                $('#left_console').scrollTop($('.console_rows')[$('.console_rows').length-1].scrollHeight*($('.console_rows').length))
+              if ($('.console_rows').length > 0)
+                $('#left_console').scrollTop($('.console_rows')[$('.console_rows').length - 1].scrollHeight * ($('.console_rows').length))
               //To keep scroll bar bottom for current_path
-              if( $('.step').length > 0)
-                $('#current_path').scrollTop($('.step')[$('.step').length-1].scrollHeight*($('.step').length))
+              if ($('.step').length > 0)
+                $('#current_path').scrollTop($('.step')[$('.step').length - 1].scrollHeight * ($('.step').length));
+            }
+            function scrollToRight(id) {
+              $(id).scrollLeft($(id).width());
             }
             function moreOptions()
             {
@@ -1903,6 +1896,7 @@
                               addToLeftConsole("Victory", "PATH FOUND!!");
                               $('#search_duration').html(elapsedTimeValue);
                               scrollToBottom(); //Scroll Top and Left areas to bottom
+                              scrollToRight("#main_area"); //Scroll Rightmost in main area
                             }
                           });
 
@@ -1926,6 +1920,7 @@
                     // getPastSearches();
                     populateReleaseList();
                     scrollToBottom(); //Scroll Top and Left areas to bottom
+                    scrollToRight("#main_area"); //Scroll to Right main area
 
                     if(selRepo){
                       selectRelease(selRepo);

@@ -91,7 +91,6 @@ public class Application extends Controller {
     public static int initFrontPageLoaded(String CLIENT_IP) {
         System.out.println("loaded: " + getClientObject().getPercentComplete());
         if (getClientObject().getPercentComplete() >= 100) {
-//            GetFileCountInAllRepos.serialize(ProgressBar.allRepoFileCount);
             try {
                 getClientObject().getGetFileCountInAllReposObject().serialize(getClientObject().allRepoFileCount);
             }
@@ -107,8 +106,6 @@ public class Application extends Controller {
 
     public static Result AjaxCalls(String callRequestURI) {
 
-
-        //System.out.println("Ajax:  "+callRequestURI+"\n");
         String ajax_CLIENT_IP = callRequestURI.trim().substring(0, callRequestURI.indexOf('/'));
         String[] temp_requestURI_array = callRequestURI.split("/");
         Client clientObject;
@@ -173,13 +170,11 @@ public class Application extends Controller {
         else if (callRequestURI.contains("progress")) {
 
             clientObject.allRepoFileCount = clientObject.getGetFileCountInAllReposObject().deserialize();
-            //   System.out.println("allRepoFileCount:  "+ProgressBar.allRepoFileCount+"  "+req_obj.ob.getThisRepoPath());
             String thisRepoPath = clientObject.getDriverClassObject().getThisRepoPath();
             if (thisRepoPath == null) {
                 return ok(Json.toJson("-1"));
             }
             int numFilesInThisRepo = clientObject.allRepoFileCount.get(thisRepoPath);
-            // System.out.println("[PROGRESS] Traversed: "+clientObject.GLOBAL_FILE_COUNT+"  total: "+numFilesInThisRepo);
             double percent = (double) clientObject.GLOBAL_FILE_COUNT * 100 / numFilesInThisRepo;
             String currentSearchString = clientObject.currentSearchString;
             return ok(Json.toJson(percent + ":" + currentSearchString + ":" + clientObject.typeOfThisSearch));
@@ -193,8 +188,7 @@ public class Application extends Controller {
                 e.printStackTrace();
             }
         }
-        else if (callRequestURI.contains("pathterminators"))
-        {
+        else if (callRequestURI.contains("pathterminators")) {
             String level = temp_requestURI_array[2];
             String file_name = temp_requestURI_array[3];
             clientObject.pathTerminators(level, file_name, clientResultObject);
@@ -205,35 +199,23 @@ public class Application extends Controller {
                 e.printStackTrace();
             }
         }
-        else if (callRequestURI.contains("stopSearching"))
-
-        {
+        else if (callRequestURI.contains("stopSearching")){
 
             clientObject.stop_searching_ind = 1;
             clientObject.searching_goingOn_ind = 0;
             return ok(Json.toJson("Stopped"));
-
         }
-        else if (callRequestURI.contains("getElapsedTime"))
-
-        {
+        else if (callRequestURI.contains("getElapsedTime")){
 
             return ok(Json.toJson(clientObject.elapsedTime));
-
         }
-        else if (callRequestURI.contains("graph"))
-
-        {
+        else if (callRequestURI.contains("graph")){
 
             return ok(graph.render(clientObject.ALL_SEARCH_STRINGS.get(0), ajax_CLIENT_IP));
-
         }
-        else if (callRequestURI.contains("getGraph"))
-
-        {
+        else if (callRequestURI.contains("getGraph")) {
 
             return ok(Json.toJson(clientObject.getMap()));
-
         }
         else if (callRequestURI.contains("newsearch")) {
 
@@ -246,24 +228,18 @@ public class Application extends Controller {
                 return ok(Json.toJson("Already searched - '" + pls_funcName + "'"));
             }
         }
-        else if (callRequestURI.contains("showFileContents"))
-
-        {
+        else if (callRequestURI.contains("showFileContents")) {
             String fileName = temp_requestURI_array[2];
             clientObject.showFileContents(fileName);
             return ok(fileContent.render(fileName, clientObject.getViewFilePath(), clientObject.getViewFileContents()));
-
-
         }
-        else if(callRequestURI.contains("filterOptions")){
+        else if (callRequestURI.contains("filterOptions")) {
             String operation = temp_requestURI_array[2];
             String userFilters = temp_requestURI_array[3];
-            clientObject.Filters_options(operation,userFilters);
-            return ok(Json.toJson("Filters set - "+userFilters));
+            clientObject.Filters_options(operation, userFilters);
+            return ok(Json.toJson("Filters set - " + userFilters));
         }
-
         return ok(Json.toJson("Bad Request: " + callRequestURI));
-
     }
 
 

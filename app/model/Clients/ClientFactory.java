@@ -19,8 +19,7 @@ public class ClientFactory {
         }
             clientObject=getClientObject(CLIENT_IP);
             clientObject.setClientInstancesRunning(1);
-            // System.out.println("Client Instances: "+clientObject.getClientInstancesRunning());
-   
+
     }
     public void activateClient(ClientThread clientThreadobj){
         clientThreadobj.start();

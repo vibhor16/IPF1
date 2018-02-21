@@ -244,7 +244,6 @@ public class Client {
             }
         }
         setClientResultObject(clientResultObject);
-//        return 0;
     }
 
 
@@ -258,8 +257,6 @@ public class Client {
         int intLevel = Integer.parseInt(level);
 
         //contains current selected fn calls that need to be colored
-
-
         currentSearchString = driverClassObject.getNewSearchString(pls_funcName);
 
         if (!isAlreadySearched(currentSearchString)) {
@@ -381,8 +378,6 @@ public class Client {
             ALL_SEARCH_STRINGS.add(searchString);
         }
 
-
-//        displayTillLevel = CURRENT_PATH.size();
         FILE_DIRECTORY_PATH = driverClassObject.FILE_DIRECTORY_PATH;
 
     }
@@ -419,10 +414,6 @@ public class Client {
         if(!temp.contains(newColorString.toLowerCase()))
              temp.add(newColorString.toLowerCase());
         colorSelectedFunctions = temp;
-    }
-
-    public void removeFromCurrentPath(String functionCall) {
-        CURRENT_PATH.remove(functionCall);
     }
 
     public boolean isAlreadySearched(String newString) {
@@ -528,15 +519,10 @@ public class Client {
         ArrayList<String> type = new ArrayList<String>();
         type.add(this.filters_searchType);
         filters_hm = new HashMap<String, ArrayList<String>>();
-
-        //When operation is USER-SET
-
-
     }
 
 
     public void setSelRepoAppendedPath(String repo) {
-
 
         ArrayList<String> NEW_AR = new ArrayList<>();
         for (String s : this.PLS_DIRECTORIES) {
@@ -677,6 +663,4 @@ public class Client {
         }
         return id;
     }
-
-
 }

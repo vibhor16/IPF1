@@ -69,6 +69,7 @@ public class Client {
         populateRepoList();
         this.GLOBAL_FILE_COUNT = 0;
         elapsedTime="";
+        lastSearchStringAnyResult=false;
 
     }
     public void setNumberGraphWindows(int change){
@@ -152,6 +153,7 @@ public class Client {
     public  String searchType="DEFAULT"; //Values: DEFAULT/USER-SET --> Useful in getting dir file count to find progress.
     public  HashMap<String,Integer> filtersDirFileCount=new HashMap<>();
     public  int countDirFileCount=0;
+    public boolean lastSearchStringAnyResult=true;
 
 
 
@@ -207,6 +209,7 @@ public class Client {
         clientResultObject.ALL_SEARCH_STRINGS=this.ALL_SEARCH_STRINGS;
         clientResultObject.ALL_REFINED_HM=this.ALL_REFINED_HM;
         clientResultObject.ALL_TYPE_COUNTS=this.ALL_TYPE_COUNTS;
+        clientResultObject.lastSearchStringAnyResult=this.lastSearchStringAnyResult;
     }
 
 
@@ -237,6 +240,7 @@ public class Client {
             if (!isAlreadySearched(SEARCH_STRING) && !SEARCH_STRING.trim().equals("") && !selectedRepository.trim().equals("")) {
                 addToCurrentPath(SEARCH_STRING);
                 execute(SEARCH_STRING);
+                displayTillLevel=1;
             }
         }
         setClientResultObject(clientResultObject);
@@ -246,7 +250,7 @@ public class Client {
 
     public String currentSearchString="";
     //receives level of UI and string eg - ordrcvb.pls-po_line_item
-    public void newSearch(String level, String pls_funcName)  {
+    public void newSearch(String level, String pls_funcName, ClientResult clientResultObject)  {
 
         this.GLOBAL_FILE_COUNT = 0;
         typeOfThisSearch = "level>1";
@@ -275,15 +279,19 @@ public class Client {
             } else {
                 colorSelectedFunctions.add(newColorString);
             }
-        }
-        if (intLevel < CURRENT_PATH.size()) {
-                setToCurrentPath(intLevel, pls_funcName);
-        }
-        if(intLevel == CURRENT_PATH.size()){
-            if(!isStringAlreadySearched(currentSearchString)){
+            //If selected function is at a previous level
+            if (intLevel < CURRENT_PATH.size()) {
                 setToCurrentPath(intLevel, pls_funcName);
             }
+            if(intLevel == CURRENT_PATH.size()){
+                if(!isStringAlreadySearched(currentSearchString)){
+                    setToCurrentPath(intLevel, pls_funcName);
+                }
+            }
         }
+
+
+        setClientResultObject(clientResultObject);
     }
 
     public boolean noEntryAtThisLevel(int level){
@@ -293,7 +301,7 @@ public class Client {
         }
         return true;
     }
-    public void pathTerminators(String level, String file_name) {
+    public void pathTerminators(String level, String file_name, ClientResult clientResultObject) {
         int flagForPls = 0;
         if (file_name.contains(".pls-"))
             flagForPls = 1;
@@ -337,6 +345,8 @@ public class Client {
         System.out.println("ALL paths:  " + FINAL_ALL_PATHS);
         if (flagForPls == 0)
             showFileContents(file_name);
+
+        setClientResultObject(clientResultObject);
     }
 
     public void execute(String searchString) {
@@ -356,14 +366,23 @@ public class Client {
 
         LinkedHashMap<String, ArrayList<String>> hm = driverClassObject.getResults();
 
+        //Last search didnt yield any result so search_string is pathterminator
+        if(hm.size()!=0)
+            lastSearchStringAnyResult = true;
+        else
+            lastSearchStringAnyResult = false;
+
 
         typeCount = driverClassObject.getTypeCount(hm);
         refinedHM = driverClassObject.getRefined(hm);
-        ALL_REFINED_HM.add(refinedHM);
-        ALL_TYPE_COUNTS.add(typeCount);
-        ALL_SEARCH_STRINGS.add(searchString);
+        if(refinedHM.size()>0) {
+            ALL_REFINED_HM.add(refinedHM);
+            ALL_TYPE_COUNTS.add(typeCount);
+            ALL_SEARCH_STRINGS.add(searchString);
+        }
 
-        displayTillLevel = CURRENT_PATH.size();
+
+//        displayTillLevel = CURRENT_PATH.size();
         FILE_DIRECTORY_PATH = driverClassObject.FILE_DIRECTORY_PATH;
 
     }
@@ -385,7 +404,10 @@ public class Client {
         for (int i = 0; i < index; i++) {
             temp.add(CURRENT_PATH.get(i));
         }
-        temp.add(newFunctionCall.toUpperCase());
+        if(newFunctionCall.trim().length()>0)
+            temp.add(newFunctionCall.toUpperCase());
+        else
+            temp.add(newColorString.toUpperCase());
         CURRENT_PATH = temp;
 
         temp = new ArrayList<>();

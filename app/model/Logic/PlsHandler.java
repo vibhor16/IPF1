@@ -121,7 +121,7 @@ public class PlsHandler   {
 		    	if(ff.getName().toLowerCase().indexOf("b.pls")<0)
 		    		continue;
 
-						// System.out.println("PLS FILE SEARCH: "+ff.getName()+"  GLOBAL_FILE_COUNT: "+clientObject.GLOBAL_FILE_COUNT);
+//						 System.out.println("PLS FILE SEARCH: "+ff.getName()+"  GLOBAL_FILE_COUNT: "+clientObject.GLOBAL_FILE_COUNT);
 		    
 		    		clientObject.GLOBAL_FILE_COUNT++;
  				
@@ -158,7 +158,8 @@ public class PlsHandler   {
 		    	lineNumber=1;
 		    	while(!line.trim().toLowerCase().equals("/"))
 		    	{
-		    		
+
+//					System.out.println("Line Number: "+lineNumber);
 		    		// check if first begin came
 		    		if(flag_first_BEGIN==0 && line.trim().toLowerCase().equals("begin"))
 		    			{
@@ -169,12 +170,11 @@ public class PlsHandler   {
 		    		
 		  //************* Associate package name with file name ****************
 			    	
-		    		if(file_package_name.size()<ff.length())
-		    		{
-			    		matcher_package_name1=pattern_package_name1.matcher(line.toUpperCase());
-			    		matcher_package_name2=pattern_package_name2.matcher(line.toUpperCase());
+
 
 			    		try{
+							matcher_package_name1=pattern_package_name1.matcher(line.toUpperCase());
+							matcher_package_name2=pattern_package_name2.matcher(line.toUpperCase());
 
 			    		while(flag_pkgName_found==0)
 			    		{
@@ -232,7 +232,8 @@ public class PlsHandler   {
 						
 				    		 line=br.readLine().toLowerCase();
 			    			}
-			    		}
+							file_package_name.forEach(global_file_package_name::putIfAbsent);
+						}
 			    		catch(NullPointerException e)
 			    		{
 			    			System.out.println("NullPointerException in 'PlsHandler' for File: "+ff.getPath()+" line: "+lineNumber);
@@ -243,8 +244,7 @@ public class PlsHandler   {
 			    			System.out.println("StringIndexOutOfBoundsException File: "+ff.getPath()+" line: "+lineNumber);
 			    		}
 			 		
-			    		file_package_name.forEach(global_file_package_name::putIfAbsent);
-		    		}
+
 		    		
 				    
 		    		 
@@ -490,8 +490,7 @@ public class PlsHandler   {
 
 					
 	    			
-	    
-					// System.out.println("Line Number: "+lineNumber); 
+
 					 // ProgressBar.endTime=System.currentTimeMillis();
 		    		 line=br.readLine().toLowerCase();
 		    		 lineNumber++;

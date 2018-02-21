@@ -53,24 +53,28 @@ var cont_search_btn_msg = 'Continue Search <i class="fa fa-refresh"></i>';
 
 function onNewSearchClick() {
     var el = document.getElementById("main_new_search");
-    if (el.innerHTML.indexOf("New") >= 0) {
-        document.getElementById("searchString").disabled = false;
-        document.getElementById("repoList").disabled = false;
-        document.getElementById("main_search_button").disabled = false;
-        document.getElementById("main_new_search").innerHTML = cont_search_btn_msg;
-        $("#result_main_panel").css("visibility", "hidden");
-        document.getElementById("searchString").value = "";
+    if (el.innerHTML.indexOf("New") >= 0)
+        changeToContinueSrchBtn();
+    else if (el.innerHTML.indexOf("Continue") >= 0)
+        changeToNewSrchBtn();
+}
 
-    } else if (el.innerHTML.indexOf("Continue") >= 0) {
-        document.getElementById("searchString").disabled = true;
-        document.getElementById("repoList").disabled = true;
-        document.getElementById("main_search_button").disabled = true;
-        document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
-        $("#result_main_panel").css("visibility", "");
-        document.getElementById("searchString").value = searchString;
-    }
+function changeToContinueSrchBtn(){
+    document.getElementById("searchString").disabled = false;
+    document.getElementById("repoList").disabled = false;
+    document.getElementById("main_search_button").disabled = false;
+    document.getElementById("main_new_search").innerHTML = cont_search_btn_msg;
+    $("#result_main_panel").css("visibility", "hidden");
+    document.getElementById("searchString").value = "";
+}
 
-
+function changeToNewSrchBtn(){
+    document.getElementById("searchString").disabled = true;
+    document.getElementById("repoList").disabled = true;
+    document.getElementById("main_search_button").disabled = true;
+    document.getElementById("main_new_search").innerHTML = new_search_btn_msg;
+    $("#result_main_panel").css("visibility", "");
+    document.getElementById("searchString").value = searchString;
 }
 
 function handleCollapse(id) {
@@ -110,6 +114,7 @@ function pathterminator(ajax_CLIENT_IP, level_count, key) {
             // $('#main_card_body').html(parts[1]);
             updateBody(data);
             addToLeftConsole("Victory", "PATH FOUND!!");
+            vibrateViewPathFlowsBtn();
             // getPastSearches();
             // populateReleaseList();
             $('#search_duration').html(elapsedTimeValue);
@@ -560,7 +565,7 @@ function addToLeftConsole(heading, content) {
         document.getElementById("left_console").innerHTML += "<p class='console_rows victory'>" + content + "</p>";
     else {
         //Contains submit button
-//                document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;margin-left: 10%;margin-right: 10%;'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;height:300px;word-wrap:break-word;'>"+content+"</div><div class='modal-footer'><button type='button' class='btn btn-sm btn-default' onclick='moreOptionsSubmit()' style='color:white'>Submit</button><button type='button' class='btn btn-sm btn-default' onclick='remove_modal()' style='color:white'>Close</button></div></div></div></div></div>";
+               document.getElementById("showPopUp").innerHTML="	<div class='col-lg-12' style='margin-bottom: 0px'><div class='modal fade in' id='warning' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' style='display: block; padding-right: 17px;'><div id='makeitmove'  class='modal-dialog' style='margin-top: 10%;margin-left: 10%;margin-right: 10%;'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>"+heading+"</h4></div><div class='modal-body' style='overflow:auto;height:300px;word-wrap:break-word;'>"+content+"</div><div class='modal-footer'><button type='button' class='btn btn-sm btn-default' onclick='moreOptionsSubmit()' style='color:white'>Submit</button><button type='button' class='btn btn-sm btn-default' onclick='remove_modal()' style='color:white'>Close</button></div></div></div></div></div>";
     }
     //Keep selected filter options intact
 
@@ -711,6 +716,7 @@ function moreOptionsSubmit() {
             // console.log("filterInit: "+filtersData["PLS"]);
             // console.log("filterInit: "+filtersData["FMB"]);
             // console.log("filterInit: "+filtersData["OTHER"]);
+            console.log(filtersData); // Prints filter set
 
         }
     });
@@ -911,6 +917,9 @@ function mainSearch(type, level_count, key, func_title) {
         initiateSearching(myURL, type, level_count, key, func_title);
 
     }//flag
+
+
+    changeToNewSrchBtn(); // Changes to New Search btn if before searching the button is continue search btn
 }
 
 
@@ -1097,6 +1106,7 @@ function getProgress(call, type, level_count, key, func_title) {
                                     disableLeftPanel(); // Should disable the left panel
                                     restoreLeftConsoleData();
                                     addToLeftConsole("Victory", "PATH FOUND!!");
+                                    vibrateViewPathFlowsBtn();
                                     $('#search_duration').html(elapsedTimeValue);
                                     scrollToBottom(); //Scroll Top and Left areas to bottom
                                     scrollToRight("#main_area"); //Scroll Rightmost in main area
@@ -1211,7 +1221,7 @@ function updateBody(data){
 
 
 
-    updateLeftPanel(CURRENT_PATH,selectRepoList,selectedRepository);
+    // updateLeftPanel(CURRENT_PATH,selectRepoList,selectedRepository);
     updateCurrentPathArea(CURRENT_PATH,displayTillLevel);
     updateMainCardBody(FINAL_ALL_PATHS,ALL_SEARCH_STRINGS,CURRENT_PATH,ALL_TYPE_COUNTS,ALL_REFINED_HM,displayTillLevel,colorSelectedFunctions);
 
@@ -1321,24 +1331,35 @@ function updateCurrentPathArea(CURRENT_PATH,displayTillLevel) {
 
 }
 
+var viewPathFlowsBtn = $('#view_path_flows_btn');
+function vibrateViewPathFlowsBtn(){
+
+    var delayInMilliseconds = 500;
+    viewPathFlowsBtn.removeClass("btn-vibrate");
+    setTimeout(function() {
+        //your code to be executed after x second
+        viewPathFlowsBtn.addClass("btn-vibrate");
+    }, delayInMilliseconds);
+
+}
+
 function updateMainCardBody(FINAL_ALL_PATHS,ALL_SEARCH_STRINGS,CURRENT_PATH,ALL_TYPE_COUNTS,ALL_REFINED_HM,displayTillLevel,colorSelectedFunctions) {
 
+    // viewPathFlowsBtn.removeClass("btn-vibrate");
     // View Path Flow button
-    var viewPathFlowsBtn = $('#view_path_flows_btn');
     if (FINAL_ALL_PATHS.hasOwnProperty(1)) {
         viewPathFlowsBtn.prop('disabled', false);
         viewPathFlowsBtn.click(function () {
             var url = '/ajax/' + CLIENT_IP + '/graph';
             window.open(url);
         });
-        viewPathFlowsBtn.addClass("btn-vibrate");
+        // vibrateViewPathFlowsBtn();
     } else {
         viewPathFlowsBtn.prop('disabled', true);
         viewPathFlowsBtn.click(function () {
         });
-        viewPathFlowsBtn.removeClass("btn-vibrate");
-    }
 
+    }
 
     // Area main card
     var htmlString = "";

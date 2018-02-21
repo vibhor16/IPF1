@@ -192,29 +192,9 @@ public class Application extends Controller {
             catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-
-
-//            return ok(vibhor_helper.render(
-//                    clientObject.FILE_DIRECTORY_PATH,
-//                    clientObject.selectedRepository,
-//                    clientObject.popupText,
-//                    clientObject.GLOBAL_FILE_COUNT,
-//                    clientObject.selectRepoList,
-//                    clientObject.FINAL_ALL_PATHS,
-//                    clientObject.colorSelectedFunctions,
-//                    clientObject.displayTillLevel,
-//                    clientObject.CURRENT_PATH,
-//                    clientObject.ALL_SEARCH_STRINGS,
-//                    clientObject.ALL_REFINED_HM,
-//                    clientObject.ALL_TYPE_COUNTS,
-//                    ajax_CLIENT_IP
-//                    ));
-
         }
         else if (callRequestURI.contains("pathterminators"))
-
         {
-
             String level = temp_requestURI_array[2];
             String file_name = temp_requestURI_array[3];
             clientObject.pathTerminators(level, file_name, clientResultObject);
@@ -224,24 +204,6 @@ public class Application extends Controller {
             catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-
-//            return ok(vibhor.render(
-//                    clientObject.FILE_DIRECTORY_PATH,
-//                    clientObject.selectedRepository,
-//                    "",
-//                    clientObject.GLOBAL_FILE_COUNT,
-//                    clientObject.selectRepoList,
-//                    clientObject.FINAL_ALL_PATHS,
-//                    clientObject.colorSelectedFunctions,
-//                    clientObject.displayTillLevel,
-//                    clientObject.CURRENT_PATH,
-//                    clientObject.ALL_SEARCH_STRINGS,
-//                    clientObject.ALL_REFINED_HM,
-//                    clientObject.ALL_TYPE_COUNTS,
-//                    ajax_CLIENT_IP
-//            ));
-
-
         }
         else if (callRequestURI.contains("stopSearching"))
 
@@ -293,10 +255,14 @@ public class Application extends Controller {
 
 
         }
+        else if(callRequestURI.contains("filterOptions")){
+            String operation = temp_requestURI_array[2];
+            String userFilters = temp_requestURI_array[3];
+            clientObject.Filters_options(operation,userFilters);
+            return ok(Json.toJson("Filters set - "+userFilters));
+        }
 
-        return
-
-                ok(Json.toJson("Bad Request: " + callRequestURI));
+        return ok(Json.toJson("Bad Request: " + callRequestURI));
 
     }
 

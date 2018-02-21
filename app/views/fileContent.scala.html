@@ -14,8 +14,8 @@
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/graph-creator.css")">
-  
-  
+
+
 </head>
 <body>
 <div class="app app-default">
@@ -25,26 +25,26 @@
         <div class="modal-dialog" style="margin:0; padding-left:0; text-align: left;">
           <div class="modal-content">
             <div class="modal-header">
-              
+
               <h4 class="modal-title"><b>File Name:</b> @file_name</h4>
 			<pre><h4 class="modal-title"><b>File Path  :</b> @file_path</h4></pre>
             </div>
             <div class="modal-body" >
 			<div class="col-xs-12">
 			  <div style="text-align:left">
-			  
+
 			@for(line <- fileContents){
 			<div class="row">
 			  <div class="col-md-1 col-sm-1 col-fileContents">
 			  @lineNum
 			  </div>
-			  
+
 			  <div class="col-md-11 col-sm-11 col-fileContents">
 			  @if(line==null){line=" "}
 			  <pre class="tab">@line</pre>
 			  </div>
 			  </div>
-               
+
 			  @(lineNum+=1)
 			  }
 			  </div>

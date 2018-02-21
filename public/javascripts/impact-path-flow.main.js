@@ -1015,8 +1015,8 @@ function getProgress(call, type, level_count, key, func_title) {
         async: true,
         success: function (data) {
             //alert(data);
-            var currSearchString = "";
-            var typeOfSearch = ""; // level_1 or level>1
+            var currSearchString;
+            var typeOfSearch; // level_1 or level>1
             var progressString = "";
             console.log("Progress:  " + data + "  zeroProgressCounter: " + zeroProgressCounter);
             if (data === "-1" || data == "alreadySearched") {
@@ -1034,7 +1034,7 @@ function getProgress(call, type, level_count, key, func_title) {
             $('#progress_bar').css('width', percent + '%');
 
 
-            if (searchString != "")
+            if (typeOfSearch === "level_1")
                 progressString = "Searching <b>" + searchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";
             else
                 progressString = "Searching <b>" + currSearchString + "</b> in <b>'" + selRepo + "'</b> (" + percent.toFixed(2) + "%)";

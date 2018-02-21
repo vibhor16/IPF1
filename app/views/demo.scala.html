@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/blue.css")">
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/red.css")">
   <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/theme/yellow.css")">
- 
+
 </head>
 <body style="width:100%; height:100%;background-color: rgba(2, 56, 103, 0.25)">
  <script src="@routes.Assets.at("javascripts/graphSpringy/jquery.min.js")"></script>
@@ -21,7 +21,7 @@
 <script>
 
 var graph = new Springy.Graph();
- 
+
  var map1={};
  var id=0;
  @for(parent <- map.keySet()){
@@ -33,19 +33,19 @@ var graph = new Springy.Graph();
 		var _@parent.replaceAll(".","_") = graph.newNode({label: '(@parent.trim())'});
 		}
 		map1["(@parent)"]=id;
-		
+
 		id=id+1;
 		}
- 
- 
+
+
 	@for(parent <- map.keySet()){
 
-		
-		 
+
+
 		var children0="@map.get(parent)";
 		var children1=children0.replace("["," ");
 		var childrenProper=children1.replace("]"," ")
-		
+
 		var child=childrenProper.split(",");
 		for(i=0;i<child.length;i++)
 		{
@@ -56,11 +56,11 @@ var graph = new Springy.Graph();
 			}
 
 		}
-  
-	}
- 
 
- 
+	}
+
+
+
 
 jQuery(function(){
   var springy = window.springy = jQuery('#springydemo').springy({
